@@ -147,7 +147,8 @@
 | **Freemium** | Gratuit | Diagnostics basiques, consultation codes erreur | Utilisateurs occasionnels |
 | **Standard** | 19,90€/mois | Dongle inclus, diagnostics avancés, OCR carte grise | Passionnés, bricoleurs |
 | **Premium** | 29,90€/mois | Dongle Pro, Flash ECU illimité, priorité support | Tuners, utilisateurs intensifs |
-| **Pro** | 99,90€/mois | Multi-véhicules, fonctions avancées, API accès | Petits professionnels |
+
+*Note: Les services pour professionnels seront développés ultérieurement sous forme de partenariats B2B et ne font pas partie des formules d'abonnement standard.*
 
 ### 5.2 Modèle de Tarification Projeté - Deux Roues
 
@@ -156,8 +157,6 @@
 | **Freemium** | Gratuit | Diagnostics basiques, codes erreur | Utilisateurs occasionnels |
 | **Rider** | 14,90€/mois | Dongle inclus, diagnostics avancés, suivi entretien | Motards quotidiens |
 | **Performance** | 24,90€/mois | Analyse performance, cartographie routière, tuning | Sportifs, passionnés |
-| **Tout-Terrain** | 24,90€/mois | Analyse terrain, cartographie GPS, mode rallye | Utilisateurs off-road |
-| **Pro** | 79,90€/mois | Multi-véhicules, outils avancés, données techniques | Ateliers spécialisés |
 
 ### 5.3 Offres Combinées Projetées
 
@@ -165,8 +164,7 @@
 |------|------|----------|---------------------------|
 | **Auto+Moto Standard** | 29,90€/mois | 4,90€/mois | Multi-compte, synchronisation |
 | **Auto+Moto Premium** | 44,90€/mois | 9,90€/mois | Support prioritaire, dongles inclus |
-| **Famille** | 39,90€/mois | Variable | Jusqu'à 5 véhicules tous types |
-| **Pro Mixte** | 149,90€/mois | 29,90€/mois | Solution complète multi-véhicules |
+| **Famille** | 39,90€/mois | Variable | Jusqu'à 3 véhicules tous types |
 
 ## 6. Potentiel de Marché et Projections
 
@@ -175,46 +173,43 @@
 - **Marché total disponible (TAM)**: 182M de véhicules automobiles + 38,7M deux roues
 - **Marché serviceable (SAM)**: 86M automobiles connectables + 18,2M deux roues
 - **Marché cible (SOM)**: 
-  - Auto: 0,8M utilisateurs (0,93% de pénétration) d'ici 2026
-  - Deux roues: 0,4M utilisateurs (2,2% de pénétration) d'ici 2026
+  - Auto: Objectif de 7,700 utilisateurs (Y3)
+  - Deux roues: Phase ultérieure de développement
 
 ### 6.2 Projections de Revenus 2025-2027
 
-| Source | 2025 | 2026 | 2027 |
-|--------|------|------|------|
-| **Abonnements Auto** | 3,2M€ | 11,5M€ | 23,8M€ |
-| **Abonnements Deux Roues** | 0,7M€ | 4,1M€ | 9,6M€ |
-| **Affiliations Auto** | 1,8M€ | 3,8M€ | 7,4M€ |
-| **Affiliations Deux Roues** | 0,2M€ | 1,5M€ | 3,3M€ |
-| **API et Services** | 0,1M€ | 0,8M€ | 2,1M€ |
-| **Total** | 6,0M€ | 21,7M€ | 46,2M€ |
+| Source | 2025 (Y1) | 2026 (Y2) | 2027 (Y3) |
+|--------|-----------|-----------|-----------|
+| **Abonnements Auto** | 215,000€ | 995,000€ | 2,505,000€ |
+| **Affiliations** | 35,000€ | 120,000€ | 320,000€ |
+| **Services B2B & API** | 0€ | 25,000€ | 85,000€ |
+| **Total** | 250,000€ | 1,140,000€ | 2,910,000€ |
 
 ### 6.3 Projections d'utilisateurs 2025-2027
 
-| Type | 2025 | 2026 | 2027 |
-|------|------|------|------|
-| **Utilisateurs Auto Total** | 382,000 | 830,000 | 1,580,000 |
-| **Abonnés Auto Payants** | 22,500 | 75,000 | 145,000 |
-| **Utilisateurs Deux Roues Total** | 48,000 | 380,000 | 780,000 |
-| **Abonnés Deux Roues Payants** | 4,200 | 38,000 | 85,000 |
+| Type | 2025 (Y1) | 2026 (Y2) | 2027 (Y3) |
+|------|-----------|-----------|-----------|
+| **Utilisateurs Auto Total** | 35,000 | 90,000 | 150,000 |
+| **Abonnés Auto Payants** | 1,100 | 3,700 | 7,700 |
+| **Conversion Freemium → Payant** | 3.1% | 4.1% | 5.1% |
 
 ## 7. Conclusions et Recommandations Stratégiques
 
 ### 7.1 Axes Stratégiques Prioritaires
 
-1. **Consolidation Auto**: Optimiser l'expérience, renforcer la rétention et améliorer le taux de conversion vers abonnements payants
-2. **Lancement Deux Roues**: Développer rapidement sur base éprouvée en adaptant aux spécificités du segment
-3. **Synergies techniques**: Maximiser la réutilisation du code et de l'infrastructure entre plateformes
-4. **Expansion géographique**: Prioriser marchés européens à forte densité de véhicules (Allemagne, Italie)
-5. **Diversification revenus**: Développer les modèles d'affiliation et de marketplace
+1. **Développement initial**: Finalisation MVP et tests utilisateurs
+2. **Lancement contrôlé**: Démarrage sur le marché français avec acquisition progressive
+3. **Optimisation produit**: Amélioration continue basée sur le feedback utilisateur
+4. **Expansion mesurée**: Préparation à l'entrée sur les marchés européens clés
+5. **Diversification revenus**: Développement du modèle d'affiliation
 
 ### 7.2 Facteurs Clés de Succès
 
-- **Time-to-market** pour Assistant Deux Roues: essentiel d'être parmi les premiers avec une solution dédiée
 - **Qualité de l'expérience utilisateur**: différenciation principale face aux solutions techniques existantes
 - **Précision diagnostique**: fondation de la confiance utilisateur et de la rétention
 - **Réseau de partenaires**: crucial pour le modèle d'affiliation et la proposition de valeur complète
-- **Capitalisation sur la base existante**: conversion et cross-selling vers la nouvelle plateforme
+- **Architecture évolutive**: capacité à s'adapter à la croissance et aux nouvelles fonctionnalités
+- **Acquisition utilisateurs maîtrisée**: croissance progressive et durable
 
 ---
 
