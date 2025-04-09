@@ -9,7 +9,7 @@ from unittest.mock import patch, MagicMock
 # Ajouter le répertoire parent au chemin pour pouvoir importer les modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from ocr import OCRProcessor
+from ocr.ocr_main import OCRProcessor, extraire_infos_carte_grise
 
 class TestOCR(unittest.TestCase):
     """Tests pour le module OCR"""
@@ -61,7 +61,7 @@ class TestOCR(unittest.TestCase):
         # Données de test
         ocr_result = {
             "success": True,
-            "full_text": "CARTE GRISE\nRENAULT CLIO\nAA-123-BB\nVF123456789012345"
+            "full_text": "CERTIFICAT D'IMMATRICULATION\nRENAULT CLIO\nAA-123-BB\nVF123456789012345\n01/01/2020\nDUPONT JEAN\n"
         }
         
         # Appeler la méthode
@@ -72,6 +72,108 @@ class TestOCR(unittest.TestCase):
         self.assertEqual(result["vehicle_info"]["registration"], "AA-123-BB")
         self.assertEqual(result["vehicle_info"]["make"], "Renault")
         self.assertEqual(result["vehicle_info"]["vin"], "VF123456789012345")
+        self.assertEqual(result["vehicle_info"]["first_registration_date"], "01/01/2020")
+    
+    def test_extract_vehicle_info_advanced(self):
+        """Test d'extraction avancée des informations du véhicule"""
+        # Données de test plus complètes
+        ocr_result = {
+            "success": True,
+            "full_text": """RÉPUBLIQUE FRANÇAISE
+            CERTIFICAT D'IMMATRICULATION
+            CARTE GRISE
+            
+            Numéro d'immatriculation: AB-123-CD
+            Date première immatriculation: 15/03/2018
+            
+            PEUGEOT 308 GTI
+            Type: M10FGUTVP5000
+            Puissance: 200 KW / 272 CH
+            
+            VIN: VF30ABCDEF12345
+            
+            MARTIN SOPHIE MARIE
+            123 RUE DE PARIS
+            75001 PARIS
+            
+            Couleur: GRIS
+            Catégorie: M1
+            """
+        }
+        
+        # Appeler la méthode
+        result = self.ocr.extract_vehicle_info(ocr_result)
+        
+        # Vérifier le résultat
+        self.assertTrue(result["success"])
+        self.assertEqual(result["vehicle_info"]["registration"], "AB-123-CD")
+        self.assertEqual(result["vehicle_info"]["make"], "Peugeot")
+        self.assertEqual(result["vehicle_info"]["model"], "308 GTI")
+        self.assertEqual(result["vehicle_info"]["vin"], "VF30ABCDEF12345")
+        self.assertEqual(result["vehicle_info"]["first_registration_date"], "15/03/2018")
+        self.assertEqual(result["vehicle_info"]["owner"], "MARTIN SOPHIE MARIE")
+        self.assertEqual(result["vehicle_info"]["power"], "200 KW")
+    
+    def test_validate_registration(self):
+        """Test de validation du format de plaque d'immatriculation"""
+        # Formats valides
+        self.assertTrue(self.ocr.validate_registration("AB-123-CD"))
+        self.assertTrue(self.ocr.validate_registration("AA-123-BB"))
+        self.assertTrue(self.ocr.validate_registration("ZZ-999-ZZ"))
+        
+        # Formats invalides
+        self.assertFalse(self.ocr.validate_registration("AB123CD"))  # sans tirets
+        self.assertFalse(self.ocr.validate_registration("AB-123-C"))  # trop court
+        self.assertFalse(self.ocr.validate_registration("123-AB-CD"))  # mauvais format
+        self.assertFalse(self.ocr.validate_registration(""))  # vide
+        self.assertFalse(self.ocr.validate_registration(None))  # None
+    
+    @patch('ocr.ocr_main.OCRProcessor.process_image')
+    def test_extraire_infos_carte_grise(self, mock_process_image):
+        """Test de la fonction de haut niveau extraire_infos_carte_grise"""
+        # Configurer le mock pour simuler une réponse réussie
+        mock_process_image.return_value = {
+            "success": True,
+            "full_text": "RENAULT CLIO\nAA-123-BB\nVF123456789012345"
+        }
+        
+        # Appeler la fonction
+        result = extraire_infos_carte_grise("fake_image_path.jpg")
+        
+        # Vérifier que le mock a été appelé correctement
+        mock_process_image.assert_called_once_with(image_path="fake_image_path.jpg")
+        
+        # Vérifier le résultat
+        self.assertTrue(result["success"])
+        self.assertEqual(result["vehicle_info"]["registration"], "AA-123-BB")
+        self.assertEqual(result["vehicle_info"]["make"], "Renault")
+        self.assertEqual(result["vehicle_info"]["vin"], "VF123456789012345")
+    
+    @patch('ocr.ocr_main.OCRProcessor.process_image')
+    @patch('ocr.ocr_main.OCRProcessor.fallback_to_tesseract')
+    def test_fallback_to_tesseract(self, mock_fallback, mock_process_image):
+        """Test du fallback vers Tesseract si Google Cloud Vision échoue"""
+        # Configurer les mocks
+        mock_process_image.return_value = {"error": "Client Google Cloud Vision non configuré"}
+        mock_fallback.return_value = {
+            "success": True,
+            "full_text": "RENAULT CLIO\nAA-123-BB\nVF123456789012345",
+            "note": "Texte extrait avec Tesseract OCR (solution de repli)"
+        }
+        
+        # Appeler la fonction
+        result = extraire_infos_carte_grise("fake_image_path.jpg")
+        
+        # Vérifier que les mocks ont été appelés correctement
+        mock_process_image.assert_called_once_with(image_path="fake_image_path.jpg")
+        mock_fallback.assert_called_once_with("fake_image_path.jpg")
+        
+        # Vérifier le résultat
+        self.assertTrue(result["success"])
+        self.assertEqual(result["vehicle_info"]["registration"], "AA-123-BB")
+        self.assertEqual(result["vehicle_info"]["make"], "Renault")
+        self.assertEqual(result["vehicle_info"]["vin"], "VF123456789012345")
+        self.assertIn("note", result)  # Le résultat devrait inclure la note du fallback
 
 if __name__ == '__main__':
     unittest.main()
