@@ -369,7 +369,9 @@ Le service propose un système d'affiliation avec des préparateurs automobiles 
 - Recherche de cartographies adaptées au véhicule de l'utilisateur
 - Catégories disponibles : Origine/Éco, Sport, Compétition
 - Sources multiples : API partenaires, Facebook Marketplace, Leboncoin, groupes Facebook
-- Commission sur chaque vente réalisée via la plateforme
+- **Système de tracking robuste** garantissant le suivi de 100% des achats effectués via l'application
+- Infrastructure de redirections sécurisées, cookies persistants, et fingerprinting d'appareil
+- Attribution totale des commissions sur chaque transaction sans aucune perte
 
 ## Documentation détaillée des modules
 
