@@ -12,7 +12,7 @@ Le module d'affiliation de cartographies est une solution pour connecter les uti
 
 ## Système de suivi d'affiliation robuste
 
-Notre système d'affiliation a été conçu avec une architecture de tracking inviolable garantissant le suivi de **100% des transactions** réalisées via l'application. Cette couverture totale est assurée par :
+Notre système d'affiliation global a été conçu avec une architecture de tracking inviolable garantissant le suivi de **100% des achats** réalisés via l'application, qu'il s'agisse de cartographies moteur, de pièces détachées ou de tout autre produit ou service proposé. Cette couverture totale est assurée par :
 
 - **Redirections sécurisées** : Toutes les redirections sont effectuées via notre serveur de tracking avant d'atteindre le site du partenaire
 - **Cookies persistants multi-domaines** avec durée de vie prolongée (90 jours) 
@@ -22,7 +22,7 @@ Notre système d'affiliation a été conçu avec une architecture de tracking in
 - **Webhook de confirmation** avec les partenaires pour validation croisée des transactions
 - **Fingerprinting d'appareil** comme méthode de secours pour associer les conversions
 
-Grâce à ces mécanismes combinés, le système garantit qu'aucune transaction affiliée ne manque d'être suivie, et nous bénéficions de la totalité des commissions sur chaque achat effectué via notre plateforme.
+Grâce à ces mécanismes combinés, le système garantit qu'aucune transaction affiliée ne manque d'être suivie, quelle que soit sa nature, et nous bénéficions de la totalité des commissions sur chaque achat effectué via notre plateforme.
 
 ## Installation et configuration
 
