@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assistant-auto-backend
+  labels:
+    app: assistant-auto
+    component: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: assistant-auto
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: assistant-auto
+        component: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: assistant-auto-backend
+        image: ${DOCKER_USERNAME}/assistant-auto-backend:${IMAGE_TAG}
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        envFrom:
+        - secretRef:
+            name: assistant-auto-secrets
+        env:
+        - name: PORT
+          value: "5000"
+        - name: ENVIRONMENT
+          value: "production"
+        - name: UPLOAD_FOLDER
+          value: "/app/uploads"
+        volumeMounts:
+        - name: uploads-volume
+          mountPath: /app/uploads
+        - name: logs-volume
+          mountPath: /app/logs
+        - name: feedback-volume
+          mountPath: /app/data/feedback
+      volumes:
+      - name: uploads-volume
+        persistentVolumeClaim:
+          claimName: assistant-auto-uploads-pvc
+      - name: logs-volume
+        persistentVolumeClaim:
+          claimName: assistant-auto-logs-pvc
+      - name: feedback-volume
+        persistentVolumeClaim:
+          claimName: assistant-auto-feedback-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: assistant-auto-uploads-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: assistant-auto-logs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: assistant-auto-feedback-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: assistant-auto-backend
+  labels:
+    app: assistant-auto
+    component: backend
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: assistant-auto
+    component: backend
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: assistant-auto-secrets
+type: Opaque
+data:
+  # Exemple - ces valeurs doivent être remplacées par des valeurs encodées en base64
+  SECRET_KEY: ZGV2X3NlY3JldF9rZXlfY2hhbmdlX2luX3Byb2R1Y3Rpb24=
+  GOOGLE_APPLICATION_CREDENTIALS: eyAiY3JlZGVudGlhbHMiOiAiKioqKioqKioiIH0=
+  OPENAI_API_KEY: c2stKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg==
+  STRIPE_API_KEY: c2tfdGVzdF8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg==
+  STRIPE_WEBHOOK_SECRET: d2hzZWNfKioqKioqKioqKioqKioqKg==
+  SENTRY_DSN: aHR0cHM6Ly95b3VyLXByb2plY3Qta2V5QHNlbnRyeS5pby95b3VyLXByb2plY3QtaWQ=
