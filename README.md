@@ -1,7 +1,7 @@
 # Assistant Auto Ultime
 
 ## Description
-Assistant Auto Ultime est une plateforme complète pour les passionnés et professionnels de l'automobile, intégrant des fonctionnalités avancées d'OCR, de diagnostic OBD-II, de traitement du langage naturel, de reconnaissance d'images, de reprogrammation ECU et de recherche de pièces détachées. La plateforme propose désormais un système d'abonnement et un service d'affiliation de cartographies moteur.
+Assistant Auto Ultime est une plateforme complète pour les passionnés et professionnels de l'automobile, intégrant des fonctionnalités avancées d'OCR, de diagnostic OBD-II, de traitement du langage naturel, de reconnaissance d'images, de reprogrammation ECU et de recherche de pièces détachées. La plateforme propose désormais un système d'abonnement et un service d'affiliation global pour tous les achats effectués via l'application.
 
 ## Objectifs
 - Simplifier le diagnostic automobile via une interface intuitive
@@ -12,7 +12,7 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - Faciliter la reprogrammation ECU pour l'optimisation des performances
 - Proposer un catalogue complet de pièces détachées (origine, sport, compétition)
 - **NOUVEAU** : Offrir un service d'abonnement avec dongle OBD-II inclus
-- **NOUVEAU** : Proposer des cartographies moteur via un système d'affiliation avec les préparateurs
+- **NOUVEAU** : Implémenter un système d'affiliation global assurant le suivi de 100% des achats réalisés via l'application
 
 ## Structure du dépôt
 - `/ocr` - Module de scan OCR pour la carte grise
@@ -25,7 +25,7 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - `/docs` - Documentation complète du projet
 - `/tests` - Tests unitaires et d'intégration
 - `/subscriptions` - **NOUVEAU** : Système de gestion des abonnements avec Stripe
-- `/mapping_affiliations` - **NOUVEAU** : Module d'affiliation pour cartographies moteur
+- `/affiliations` - **NOUVEAU** : Module d'affiliation global pour tous les achats
 
 ## Installation
 
@@ -37,7 +37,7 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - Interface de flashage ECU (ex: Tactrix Openport) pour le module de reprogrammation
 - Clés API pour Google Cloud Vision (OCR) et OpenAI (NLP)
 - **NOUVEAU** : Compte Stripe pour le système d'abonnement
-- **NOUVEAU** : Clés API pour les services d'affiliation de cartographies
+- **NOUVEAU** : Clés API pour les services d'affiliation
 
 ### Installation avec environnement virtuel Python
 
@@ -297,15 +297,22 @@ result = process_subscription(user_data)
 print(f"Abonnement créé: {result}")
 ```
 
-### Mapping Affiliations - Cartographies moteur (NOUVEAU)
-Module d'affiliation pour proposer des cartographies moteur personnalisées.
+### Affiliations - Système d'affiliation global (NOUVEAU)
+Module d'affiliation pour tous les achats réalisés via l'application.
 ```python
-from mapping_affiliations.mapping_affiliations_main import search_mapping_offers
+from affiliations.affiliations_main import track_purchase
 
-# Rechercher des cartographies pour un véhicule
-results = search_mapping_offers(query="cartographie golf 7 gti", category="sport")
-for result in results:
-    print(f"{result['preparateur']} - {result['description']} - {result['price']} - {result['source']}")
+# Exemple de suivi d'achat
+purchase_data = {
+    "product_type": "cartographie",  # Type de produit (cartographie, pièce, accessoire, etc.)
+    "product_id": "cart-123",        # ID du produit
+    "price": 299.90,                 # Prix
+    "partner_id": "partner-456",     # ID du partenaire
+    "user_id": "user-789",           # ID de l'utilisateur
+    "session_id": "sess-abc123"      # ID de session pour le tracking
+}
+tracking_result = track_purchase(purchase_data)
+print(f"Suivi d'achat: {tracking_result}")
 ```
 
 ### Tests unitaires
@@ -338,7 +345,7 @@ L'application expose les endpoints principaux suivants :
 - `POST /subscribe` - **NOUVEAU** : Souscription à un abonnement Stripe
 - `GET /subscribe/plans` - **NOUVEAU** : Récupère les plans d'abonnement disponibles
 - `POST /subscribe/webhook` - **NOUVEAU** : Gestion des webhooks Stripe
-- `POST /mapping_affiliations` - **NOUVEAU** : Recherche de cartographies via affiliation
+- `POST /affiliations/track` - **NOUVEAU** : Suivi d'achat pour l'affiliation
 
 Consultez la documentation complète de l'API dans le fichier [api.md](docs/api.md).
 
@@ -383,7 +390,7 @@ Des guides d'utilisation complets sont disponibles pour chaque module :
 - [Module ECU Flash](docs/README_ECU_FLASH.md)
 - [Module Parts Finder](docs/README_PARTS_FINDER.md)
 - [Module Subscriptions](docs/README_SUBSCRIPTIONS.md) - **NOUVEAU**
-- [Module Mapping Affiliations](docs/README_MAPPING_AFFILIATIONS.md) - **NOUVEAU**
+- [Module Affiliations](docs/README_AFFILIATIONS.md) - **NOUVEAU**
 - [Frontend](docs/README_FRONTEND.md)
 
 ## Précautions d'utilisation
