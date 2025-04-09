@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: assistant-auto-backend
+  name: novaevo-backend
   labels:
-    app: assistant-auto
+    app: novaevo
     component: backend
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: assistant-auto
+      app: novaevo
       component: backend
   template:
     metadata:
       labels:
-        app: assistant-auto
+        app: novaevo
         component: backend
       annotations:
         prometheus.io/scrape: "true"
@@ -22,8 +22,8 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       containers:
-      - name: assistant-auto-backend
-        image: ${DOCKER_USERNAME}/assistant-auto-backend:${IMAGE_TAG}
+      - name: novaevo-backend
+        image: ${DOCKER_USERNAME}/novaevo-backend:${IMAGE_TAG}
         ports:
         - containerPort: 5000
         resources:
@@ -47,7 +47,7 @@ spec:
           periodSeconds: 20
         envFrom:
         - secretRef:
-            name: assistant-auto-secrets
+            name: novaevo-secrets
         env:
         - name: PORT
           value: "5000"
@@ -65,18 +65,18 @@ spec:
       volumes:
       - name: uploads-volume
         persistentVolumeClaim:
-          claimName: assistant-auto-uploads-pvc
+          claimName: novaevo-uploads-pvc
       - name: logs-volume
         persistentVolumeClaim:
-          claimName: assistant-auto-logs-pvc
+          claimName: novaevo-logs-pvc
       - name: feedback-volume
         persistentVolumeClaim:
-          claimName: assistant-auto-feedback-pvc
+          claimName: novaevo-feedback-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: assistant-auto-uploads-pvc
+  name: novaevo-uploads-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -87,7 +87,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: assistant-auto-logs-pvc
+  name: novaevo-logs-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -98,7 +98,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: assistant-auto-feedback-pvc
+  name: novaevo-feedback-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -109,9 +109,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: assistant-auto-backend
+  name: novaevo-backend
   labels:
-    app: assistant-auto
+    app: novaevo
     component: backend
 spec:
   ports:
@@ -120,13 +120,13 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: assistant-auto
+    app: novaevo
     component: backend
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: assistant-auto-secrets
+  name: novaevo-secrets
 type: Opaque
 data:
   # Exemple - ces valeurs doivent être remplacées par des valeurs encodées en base64
