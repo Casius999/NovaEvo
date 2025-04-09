@@ -27,6 +27,12 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - `/subscriptions` - **NOUVEAU** : Système de gestion des abonnements avec Stripe
 - `/affiliations` - **NOUVEAU** : Module d'affiliation global pour tous les achats
 
+## Documentation Stratégique et Financière
+- [Plan Financier Optimisé](docs/FINANCIAL_PLAN.md) - Plan financier complet sur 3 ans
+- [Optimisation des Coûts](docs/COST_OPTIMIZATION_SUMMARY.md) - Synthèse des réductions de coûts (-37%)
+- [Architecture Serverless](docs/ARCHITECTURE_SERVERLESS.md) - Solution technique optimisée
+- [Finances du Système d'Affiliation](docs/AFFILIATION_FINANCES.md) - Modèle économique d'affiliation
+
 ## Installation
 
 ### Prérequis
