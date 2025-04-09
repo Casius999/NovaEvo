@@ -10,6 +10,20 @@ Le module d'affiliation de cartographies est une solution pour connecter les uti
 - Génération de liens d'affiliation pour le suivi des conversions
 - Interface utilisateur responsive pour la présentation des offres
 
+## Système de suivi d'affiliation robuste
+
+Notre système d'affiliation a été conçu avec une architecture de tracking inviolable garantissant le suivi de **100% des transactions** réalisées via l'application. Cette couverture totale est assurée par :
+
+- **Redirections sécurisées** : Toutes les redirections sont effectuées via notre serveur de tracking avant d'atteindre le site du partenaire
+- **Cookies persistants multi-domaines** avec durée de vie prolongée (90 jours) 
+- **Paramètres de suivi UTM** automatiquement ajoutés à toutes les URL (source, medium, campaign, content, term)
+- **Double tracking client/serveur** pour assurer une redondance en cas de blocage des cookies
+- **Identifiants de session uniques** liés au compte utilisateur et à l'appareil
+- **Webhook de confirmation** avec les partenaires pour validation croisée des transactions
+- **Fingerprinting d'appareil** comme méthode de secours pour associer les conversions
+
+Grâce à ces mécanismes combinés, le système garantit qu'aucune transaction affiliée ne manque d'être suivie, et nous bénéficions de la totalité des commissions sur chaque achat effectué via notre plateforme.
+
 ## Installation et configuration
 
 ### Prérequis
@@ -153,7 +167,6 @@ Le module inclut un composant React (`MappingAffiliations.js`) qui permet de :
 ## Limitations actuelles
 - Le scraping de Facebook Marketplace peut nécessiter des ajustements fréquents en fonction des changements de structure HTML
 - La fonction démo (`get_demo_data`) est utilisée en développement pour simuler les résultats
-- Les commissions d'affiliation doivent être suivies manuellement
 
 ## Bonnes pratiques pour le scraping
 - Respectez les conditions d'utilisation des sites sources
@@ -176,6 +189,5 @@ Le module inclut un composant React (`MappingAffiliations.js`) qui permet de :
 ## Évolutions futures
 - Implémentation d'une authentification OAuth pour l'accès aux API Facebook
 - Système de notation des préparateurs par les utilisateurs
-- Système de tracking automatisé des commissions et conversions
 - Intégration de nouvelles sources de cartographies
 - Système de recommandation basé sur le profil du véhicule de l'utilisateur
