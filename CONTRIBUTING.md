@@ -1,6 +1,6 @@
 # Guide de contribution
 
-Merci de votre intérêt pour contribuer à Assistant Auto Ultime ! Voici quelques directives pour vous aider à contribuer efficacement.
+Merci de votre intérêt pour contribuer à NovaEvo ! Voici quelques directives pour vous aider à contribuer efficacement.
 
 ## Processus de contribution
 
