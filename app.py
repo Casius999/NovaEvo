@@ -25,7 +25,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # Importer les modules
 from ocr.ocr_main import OCRProcessor
 from obd2.obd_main import OBDManager
-# from nlp import nlp_main
+from nlp.nlp_main import AutoAssistantNLP
 # from image_recognition import image_recognition_main
 # from ecu_flash import ecu_flash_main
 # from parts_finder import parts_finder_main
@@ -33,6 +33,7 @@ from obd2.obd_main import OBDManager
 # Initialiser les gestionnaires des modules
 ocr_processor = OCRProcessor()
 obd_manager = OBDManager()
+nlp_assistant = AutoAssistantNLP()
 
 # Routes principales
 
@@ -168,13 +169,103 @@ def get_vehicle_data():
 
 @app.route('/nlp', methods=['POST'])
 def nlp_endpoint():
-    """Endpoint pour le module NLP"""
-    query = request.json.get('query', '')
-    return jsonify({
-        'status': 'success',
-        'message': f'Module NLP a reçu: {query}',
-        'endpoint': '/nlp'
-    })
+    """
+    Endpoint pour le module NLP
+    
+    Accepte une commande en langage naturel et retourne une interprétation/réponse
+    """
+    # Vérifier si les données sont présentes dans la requête
+    if not request.is_json:
+        return jsonify({
+            'status': 'error',
+            'message': 'Requête invalide. Veuillez envoyer un JSON avec le champ "command".'
+        }), 400
+    
+    data = request.get_json()
+    if not data or 'command' not in data:
+        return jsonify({
+            'status': 'error',
+            'message': 'Aucune commande trouvée dans la requête. Le champ "command" est requis.'
+        }), 400
+    
+    # Récupérer la commande
+    command = data['command']
+    
+    try:
+        # Traiter la commande avec le module NLP
+        response = process_command(command)
+        
+        # Retourner la réponse
+        return jsonify({
+            'status': 'success',
+            'response': response
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors du traitement de la commande: {str(e)}'
+        }), 500
+
+def process_command(command: str) -> str:
+    """
+    Traite une commande en langage naturel et retourne une réponse
+    
+    Args:
+        command (str): La commande en langage naturel
+        
+    Returns:
+        str: La réponse générée par l'assistant
+    """
+    # Utiliser notre assistant NLP pour interpréter la commande
+    result = nlp_assistant.interpret_command(command)
+    
+    # Si une erreur est détectée
+    if "error" in result:
+        return f"Je n'ai pas pu traiter votre demande : {result['error']}"
+    
+    # Si c'est un code d'erreur ou une demande d'entretien, on peut utiliser directement la description
+    if "description" in result:
+        return result["description"]
+    
+    # Pour les autres types de requêtes, utiliser le module OpenAI pour générer une réponse
+    system_prompt = """
+    Tu es un assistant automobile expert qui répond aux questions des utilisateurs.
+    Ta réponse doit être informative, précise et sécuritaire.
+    Pour les modifications mécaniques, mentionne toujours les précautions de sécurité.
+    """
+    
+    try:
+        # Créer un message pour OpenAI qui inclut la catégorie détectée
+        context = f"L'utilisateur pose une question dans la catégorie: {result.get('category', 'générale')}"
+        if "intent" in result:
+            context += f", avec l'intention de: {result['intent']}"
+        if "entities" in result:
+            for key, value in result["entities"].items():
+                context += f"\n- {key}: {value}"
+        
+        # Utiliser OpenAI pour générer une réponse plus complète
+        import openai
+        response = openai.chat.completions.create(
+            model=nlp_assistant.model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"{context}\n\nQuestion: {command}"}
+            ],
+            temperature=0.7,
+            max_tokens=300
+        )
+        
+        # Extraire la réponse
+        return response.choices[0].message.content.strip()
+        
+    except Exception as e:
+        # En cas d'erreur avec OpenAI, utiliser les informations extraites
+        fallback_response = f"Catégorie détectée: {result.get('category', 'inconnue')}"
+        if "suggested_action" in result:
+            fallback_response += f"\nSuggestion: {result['suggested_action']}"
+        
+        return fallback_response
 
 @app.route('/image_recognition', methods=['POST'])
 def image_recognition_endpoint():
