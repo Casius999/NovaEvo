@@ -13,6 +13,10 @@ import ECUFlash from './components/ECUFlash';
 import PartsFinder from './components/PartsFinder';
 import Auth from './components/Auth';
 
+// Nouveaux imports pour l'étape 10
+import Subscriptions from './components/Subscriptions';
+import MappingAffiliations from './components/MappingAffiliations';
+
 // Page d'accueil avec des cartes pour chaque module
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -40,8 +44,12 @@ const Home = () => {
           <div className="mb-4">
             <Alert variant="info">
               Bienvenue, <strong>{user.name}</strong>! 
-              Vous avez un abonnement <Badge bg="primary">{user.subscriptionType}</Badge> 
-              valable jusqu'au {user.subscriptionEndDate}.
+              {user.subscriptionType && (
+                <>
+                  Vous avez un abonnement <Badge bg="primary">{user.subscriptionType}</Badge> 
+                  {user.subscriptionEndDate && ` valable jusqu'au ${user.subscriptionEndDate}`}.
+                </>
+              )}
             </Alert>
           </div>
         )}
@@ -120,6 +128,37 @@ const Home = () => {
             </Card.Body>
           </Card>
         </Col>
+        {/* Nouvelles cartes pour les modules de l'étape 10 */}
+        <Col md={6} className="mb-4">
+          <Card className="h-100 shadow-sm border-primary">
+            <Card.Header className="bg-primary text-white">
+              <h5 className="mb-0">NOUVEAU</h5>
+            </Card.Header>
+            <Card.Img variant="top" src="https://via.placeholder.com/300x150?text=Abonnement+Premium" />
+            <Card.Body>
+              <Card.Title>Abonnements</Card.Title>
+              <Card.Text>
+                Souscrivez à notre abonnement mensuel à 19,90€ et recevez un dongle OBD-II offert pour un diagnostic complet de votre véhicule.
+              </Card.Text>
+              <Link to="/subscriptions" className="btn btn-primary">Découvrir nos offres</Link>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={6} className="mb-4">
+          <Card className="h-100 shadow-sm border-success">
+            <Card.Header className="bg-success text-white">
+              <h5 className="mb-0">NOUVEAU</h5>
+            </Card.Header>
+            <Card.Img variant="top" src="https://via.placeholder.com/300x150?text=Cartographies+Pro" />
+            <Card.Body>
+              <Card.Title>Cartographies Pro</Card.Title>
+              <Card.Text>
+                Trouvez les meilleures offres de reprogrammation moteur pour optimiser les performances ou réduire la consommation de votre véhicule.
+              </Card.Text>
+              <Link to="/mapping-affiliations" className="btn btn-success">Explorer les offres</Link>
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
     </Container>
   );
@@ -175,12 +214,31 @@ function App() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">Accueil</Nav.Link>
-              <Nav.Link as={Link} to="/ocr">OCR</Nav.Link>
-              <Nav.Link as={Link} to="/obd2">OBD-II</Nav.Link>
-              <Nav.Link as={Link} to="/nlp">NLP</Nav.Link>
-              <Nav.Link as={Link} to="/image-recognition">Reconnaissance d'image</Nav.Link>
-              <Nav.Link as={Link} to="/ecu-flash">ECU Flash</Nav.Link>
-              <Nav.Link as={Link} to="/parts-finder">Parts Finder</Nav.Link>
+              
+              {/* Menu déroulant pour le diagnostic */}
+              <Dropdown as={Nav.Item}>
+                <Dropdown.Toggle as={Nav.Link}>Diagnostic</Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/ocr">OCR Carte Grise</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/obd2">OBD-II</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/image-recognition">Reconnaissance d'image</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              
+              {/* Menu déroulant pour l'optimisation */}
+              <Dropdown as={Nav.Item}>
+                <Dropdown.Toggle as={Nav.Link}>Optimisation</Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/ecu-flash">ECU Flash</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/mapping-affiliations">Cartographies Pro</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              
+              <Nav.Link as={Link} to="/nlp">Assistant Auto</Nav.Link>
+              <Nav.Link as={Link} to="/parts-finder">Pièces détachées</Nav.Link>
+              
+              {/* Nouveaux liens pour l'étape 10 */}
+              <Nav.Link as={Link} to="/subscriptions" className="text-primary">Abonnements</Nav.Link>
             </Nav>
             
             {isAuthenticated ? (
@@ -190,15 +248,21 @@ function App() {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item as={Link} to="/profile">Mon Profil</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/subscriptions">Gérer mon abonnement</Dropdown.Item>
                   <Dropdown.Item as={Link} to="/settings">Paramètres</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={handleLogout}>Déconnexion</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Button variant="outline-light" as={Link} to="/auth">
-                Connexion
-              </Button>
+              <>
+                <Button variant="outline-light" as={Link} to="/auth" className="me-2">
+                  Connexion
+                </Button>
+                <Button variant="primary" as={Link} to="/subscriptions">
+                  S'abonner
+                </Button>
+              </>
             )}
           </Navbar.Collapse>
         </Container>
@@ -213,19 +277,33 @@ function App() {
         <Route path="/ecu-flash" element={isAuthenticated ? <ECUFlash /> : <Navigate to="/auth" />} />
         <Route path="/parts-finder" element={isAuthenticated ? <PartsFinder /> : <Navigate to="/auth" />} />
         <Route path="/auth" element={<Auth setIsAuthenticated={setIsAuthenticated} />} />
+        
+        {/* Nouvelles routes pour l'étape 10 */}
+        <Route path="/subscriptions" element={<Subscriptions />} />
+        <Route path="/mapping-affiliations" element={isAuthenticated ? <MappingAffiliations /> : <Navigate to="/auth" />} />
+        
+        {/* Redirection par défaut */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       
       <footer className="bg-light py-4 mt-5">
         <Container>
           <Row>
-            <Col md={6}>
+            <Col md={4}>
               <h5>Assistant Auto Ultime</h5>
               <p className="text-muted">
                 © 2025 Assistant Auto Ultime. Tous droits réservés.
               </p>
             </Col>
-            <Col md={6} className="text-md-end">
+            <Col md={4}>
+              <h6>Abonnements</h6>
+              <Nav className="flex-column">
+                <Nav.Link as={Link} to="/subscriptions" className="text-muted p-0 mb-1">Offres & Tarifs</Nav.Link>
+                <Nav.Link as={Link} to="/mapping-affiliations" className="text-muted p-0 mb-1">Cartographies Pro</Nav.Link>
+                <Nav.Link href="#" className="text-muted p-0 mb-1">Devenir Partenaire</Nav.Link>
+              </Nav>
+            </Col>
+            <Col md={4} className="text-md-end">
               <Button variant="link" className="text-muted">Conditions d'utilisation</Button>
               <Button variant="link" className="text-muted">Politique de confidentialité</Button>
               <Button variant="link" className="text-muted">Contact</Button>
