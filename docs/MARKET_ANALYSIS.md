@@ -1,4 +1,4 @@
-# Analyse de Marché - Assistant Auto Ultime & Assistant Deux Roues
+# Analyse de Marché - NovaEvo & NovaEvo Deux Roues
 
 ## 1. Aperçu du Marché Automobile
 
@@ -94,14 +94,14 @@
 
 ### 3.3 Avantages Compétitifs - Notre Positionnement
 
-#### Assistant Auto Ultime
+#### NovaEvo
 - **Intégration complète**: Seule solution combinant diagnostic, tuning, et pièces détachées
 - **IA avancée**: Capacités prédictives et d'analyse supérieures à la concurrence
 - **Modèle d'abonnement accessible**: Meilleur rapport fonctionnalités/prix
 - **Fonctionnalités exclusives**: OCR carte grise, reconnaissance d'image de pièces
 - **Affiliations**: Réseau de partenaires étendu incluant des exclusivités (Autodoc, Barrault)
 
-#### Assistant Deux Roues & Quads (Avantages Projetés)
+#### NovaEvo Deux Roues & Quads (Avantages Projetés)
 - **Solution spécialisée**: Adaptée aux spécificités des deux roues et quads
 - **Experience cross-plateforme**: Synergie avec l'écosystème Auto existant
 - **Focus terrain et performance**: Fonctionnalités uniques pour usage sportif et tout-terrain
