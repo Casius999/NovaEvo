@@ -51,7 +51,7 @@ bcrypt==4.0.1
 PyJWT==2.8.0
 cryptography==41.0.3
 
-# Monitoring et observabilité (nouvelles dépendances étape 11)
+# Monitoring et observabilité
 sentry-sdk==1.31.0
 prometheus-client==0.17.1
 elastic-apm==6.18.0
@@ -70,3 +70,17 @@ matplotlib==3.7.2
 tqdm==4.66.1
 pydantic==2.3.0
 marshmallow==3.20.1
+
+# Nouvelles dépendances pour modules contextuels et synchronisation
+aiohttp==3.8.5           # Pour les requêtes asynchrones
+fastjsonschema==2.18.0   # Validation JSON Schema
+pyyaml==6.0.1            # Parsing YAML
+ujson==5.8.0             # JSON ultra-rapide
+APScheduler==3.10.4      # Planification des tâches
+python-dateutil==2.8.2   # Manipulation des dates
+dataclasses-json==0.6.1  # Serialization des dataclasses
+pyOpenSSL==23.2.0        # Vérification TLS
+dnspython==2.4.2         # Résolution DNS
+certifi==2023.7.22       # Vérification des certificats
+pytz==2023.3             # Gestion des fuseaux horaires
+tenacity==8.2.3          # Mécanismes de retry
