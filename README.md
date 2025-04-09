@@ -1,7 +1,7 @@
-# Assistant Auto Ultime
+# NovaEvo
 
 ## Description
-Assistant Auto Ultime est une plateforme complète pour les passionnés et professionnels de l'automobile, intégrant des fonctionnalités avancées d'OCR, de diagnostic OBD-II, de traitement du langage naturel, de reconnaissance d'images, de reprogrammation ECU et de recherche de pièces détachées. La plateforme propose désormais un système d'abonnement et un service d'affiliation global pour tous les achats effectués via l'application.
+NovaEvo est une plateforme complète pour les passionnés et professionnels de l'automobile, intégrant des fonctionnalités avancées d'OCR, de diagnostic OBD-II, de traitement du langage naturel, de reconnaissance d'images, de reprogrammation ECU et de recherche de pièces détachées. La plateforme propose désormais un système d'abonnement et un service d'affiliation global pour tous les achats effectués via l'application.
 
 ## Objectifs
 - Simplifier le diagnostic automobile via une interface intuitive
@@ -28,6 +28,7 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - `/mapping_affiliations` - **NOUVEAU** : Module d'affiliation global pour tous les achats
 
 ## Documentation Stratégique et Financière
+- [Vision Stratégique](docs/NOVAEVO_VISION.md) - Vision globale et proposition de valeur
 - [Plan Financier](docs/FINANCIAL_PLAN.md) - Plan financier prévisionnel sur 3 ans
 - [Stratégie d'Optimisation des Coûts](docs/COST_OPTIMIZATION_SUMMARY.md) - Approche d'optimisation financière
 - [Architecture Serverless](docs/ARCHITECTURE_SERVERLESS.md) - Solution technique optimisée
@@ -186,7 +187,7 @@ En production, ne stockez jamais les variables d'environnement directement dans 
      version: '3.8'
      services:
        app:
-         image: assistant-auto-ultime-backend
+         image: novaevo-backend
          secrets:
            - google_api_key
            - openai_api_key
@@ -358,7 +359,7 @@ Consultez la documentation complète de l'API dans le fichier [api.md](docs/api.
 
 ## Internationalisation
 
-L'Assistant Auto Ultime prend en charge plusieurs langues. Pour contribuer aux traductions ou ajouter une nouvelle langue, consultez notre [guide d'internationalisation](docs/INTERNATIONALIZATION.md).
+NovaEvo prend en charge plusieurs langues. Pour contribuer aux traductions ou ajouter une nouvelle langue, consultez notre [guide d'internationalisation](docs/INTERNATIONALIZATION.md).
 
 ## Fonctionnalités commerciales (NOUVEAU)
 
