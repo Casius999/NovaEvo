@@ -24,7 +24,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Importer les modules
 from ocr.ocr_main import OCRProcessor
-# from obd2 import obd_main
+from obd2.obd_main import OBDManager
 # from nlp import nlp_main
 # from image_recognition import image_recognition_main
 # from ecu_flash import ecu_flash_main
@@ -32,6 +32,7 @@ from ocr.ocr_main import OCRProcessor
 
 # Initialiser les gestionnaires des modules
 ocr_processor = OCRProcessor()
+obd_manager = OBDManager()
 
 # Routes principales
 
@@ -105,11 +106,65 @@ def ocr_endpoint():
 @app.route('/obd2', methods=['GET'])
 def obd2_endpoint():
     """Endpoint pour le module OBD-II"""
-    return jsonify({
-        'status': 'success',
-        'message': 'Module OBD-II prêt à se connecter',
-        'endpoint': '/obd2'
-    })
+    try:
+        # Récupérer les données du véhicule via le module OBD-II
+        data = get_vehicle_data()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de la récupération des données OBD-II: {str(e)}'
+        }), 500
+
+def get_vehicle_data():
+    """
+    Fonction pour récupérer les données du véhicule via OBD-II
+    
+    Returns:
+        dict: Données du véhicule (RPM, vitesse, codes d'erreur)
+    """
+    # Tenter de se connecter au dongle OBD-II
+    connected = obd_manager.connect()
+    
+    # Préparer la structure de retour
+    data = {}
+    
+    # Si la connexion échoue
+    if not connected:
+        return {
+            "error": "Connexion OBD-II échouée. Vérifiez que le dongle est bien connecté et que le moteur est allumé."
+        }
+    
+    try:
+        # Récupérer le régime moteur (RPM)
+        rpm_data = obd_manager.get_rpm()
+        if "error" not in rpm_data:
+            data["RPM"] = rpm_data.get("value", "Non disponible")
+        else:
+            data["RPM"] = "Non disponible"
+        
+        # Récupérer la vitesse
+        speed_data = obd_manager.get_speed()
+        if "error" not in speed_data:
+            data["Speed"] = speed_data.get("value", "Non disponible")
+        else:
+            data["Speed"] = "Non disponible"
+        
+        # Récupérer les codes d'erreur (DTC)
+        dtc_data = obd_manager.get_dtc_codes()
+        if "error" not in dtc_data:
+            if dtc_data.get("codes", []):
+                data["DTC"] = dtc_data.get("codes", [])
+            else:
+                data["DTC"] = "Aucun code détecté"
+        else:
+            data["DTC"] = "Non disponible"
+        
+        return data
+    
+    finally:
+        # S'assurer de fermer la connexion
+        obd_manager.disconnect()
 
 @app.route('/nlp', methods=['POST'])
 def nlp_endpoint():
