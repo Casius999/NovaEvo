@@ -1,6 +1,7 @@
 """
 Module ECU Flash - Reprogrammation et configuration ECU
 Ce module permet de lire, interpréter et modifier les paramètres de l'ECU (cartographie moteur)
+en utilisant une bibliothèque professionnelle de flashage réel.
 """
 
 import os
@@ -9,7 +10,13 @@ import time
 import logging
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
-from typing import Dict, List, Optional, Union, Any
+from typing import Dict, List, Optional, Union, Any, Tuple
+
+# Importer la bibliothèque professionnelle de flashage
+try:
+    from ecu_flash_lib import ECUFlashController
+except ImportError:
+    logging.warning("La bibliothèque ecu_flash_lib n'est pas disponible. Certaines fonctionnalités seront limitées.")
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -20,6 +27,17 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger('ecu_flash')
+
+# Limites sécurisées pour les paramètres de tuning
+SECURE_LIMITS = {
+    "cartographie_injection": {"default": 100, "min": 90, "max": 115},
+    "boost_turbo": {"default": 1.0, "min": 0.8, "max": 1.2},
+    "avance_allumage": {"default": 10, "min": 5, "max": 15},
+    "limiteur_regime": {"default": 6500, "min": 6000, "max": 7500},
+    "richesse_melange": {"default": 1.0, "min": 0.9, "max": 1.1},
+    "temperature_admission": {"default": 50, "min": 45, "max": 65},
+    "pression_carburant": {"default": 3.5, "min": 3.0, "max": 4.0}
+}
 
 # Modèles de données pour la cartographie
 class MapAxis(BaseModel):
@@ -66,6 +84,131 @@ class ECUConfiguration(BaseModel):
     maps: Dict[str, TuningMap]
     metadata: Dict[str, Any]
 
+def validate_tuning_parameters(tuning_parameters: dict) -> Tuple[bool, str]:
+    """
+    Vérifie que chaque paramètre est dans sa plage sécurisée
+    
+    Args:
+        tuning_parameters (dict): Paramètres de tuning à valider
+        
+    Returns:
+        Tuple[bool, str]: Résultat de la validation (succès/échec, message)
+    """
+    for param, value in tuning_parameters.items():
+        if param in SECURE_LIMITS:
+            limits = SECURE_LIMITS[param]
+            if not (limits["min"] <= value <= limits["max"]):
+                return False, f"Valeur '{value}' pour '{param}' hors limite (min: {limits['min']}, max: {limits['max']})."
+        else:
+            return False, f"Paramètre inconnu: {param}."
+    return True, ""
+
+def backup_current_configuration(controller: 'ECUFlashController', backup_file="ecu_backup.json"):
+    """
+    Lit et sauvegarde la configuration actuelle de l'ECU via l'API du flash tool
+    
+    Args:
+        controller (ECUFlashController): Contrôleur de flashage ECU
+        backup_file (str): Chemin du fichier de sauvegarde
+        
+    Returns:
+        dict: Configuration actuelle de l'ECU
+    """
+    # Récupère la configuration actuelle de l'ECU via l'API réelle
+    logger.info("Sauvegarde de la configuration actuelle de l'ECU")
+    current_config = controller.read_configuration()
+    
+    # Sauvegarde dans un fichier
+    try:
+        os.makedirs(os.path.dirname(os.path.abspath(backup_file)), exist_ok=True)
+        with open(backup_file, "w") as f:
+            json.dump(current_config, f, indent=2)
+        logger.info(f"Configuration sauvegardée dans {backup_file}")
+    except Exception as e:
+        logger.error(f"Erreur lors de la sauvegarde du fichier de backup: {str(e)}")
+    
+    return current_config
+
+def flash_ecu(tuning_parameters: dict) -> dict:
+    """
+    Flashe l'ECU avec les paramètres fournis en utilisant l'outil de flashage réel
+    
+    Args:
+        tuning_parameters (dict): Paramètres de tuning à appliquer
+        
+    Returns:
+        dict: Résultat de l'opération de flashage
+    """
+    # Valider les paramètres
+    is_valid, message = validate_tuning_parameters(tuning_parameters)
+    if not is_valid:
+        logger.error(f"Validation des paramètres échouée: {message}")
+        return {"status": "error", "message": message}
+    
+    logger.info(f"Flashage de l'ECU avec les paramètres: {tuning_parameters}")
+    
+    try:
+        # Initialiser le contrôleur de flashage ECU (outil de flashage réel)
+        controller = ECUFlashController()
+        logger.info("Connecté à l'outil de flashage")
+        
+        # Sauvegarder la configuration actuelle
+        backup = backup_current_configuration(controller)
+        logger.info("Configuration actuelle sauvegardée")
+        
+        try:
+            # Appliquer les nouveaux réglages via la méthode réelle de flashage
+            logger.info("Application des nouveaux paramètres...")
+            result = controller.flash_configuration(tuning_parameters)
+            
+            if result.get('success'):
+                logger.info("Flash de l'ECU réussi")
+                return {
+                    "status": "success",
+                    "message": "Flash de l'ECU réussi.",
+                    "new_configuration": tuning_parameters
+                }
+            else:
+                # En cas d'échec, effectuer un rollback
+                logger.warning(f"Flash de l'ECU échoué: {result.get('message', 'Raison inconnue')}")
+                logger.info("Tentative de rollback...")
+                controller.restore_configuration(backup)
+                logger.info("Rollback effectué avec succès")
+                return {
+                    "status": "error",
+                    "message": f"Flash de l'ECU échoué: {result.get('message', 'Raison inconnue')}. Rollback effectué."
+                }
+        except Exception as e:
+            # En cas d'exception, tenter un rollback et renvoyer l'erreur
+            logger.error(f"Exception lors du flash: {str(e)}")
+            logger.info("Tentative de rollback...")
+            try:
+                controller.restore_configuration(backup)
+                logger.info("Rollback effectué avec succès")
+            except Exception as rollback_error:
+                logger.error(f"Erreur lors du rollback: {str(rollback_error)}")
+                return {
+                    "status": "error", 
+                    "message": f"Erreur critique: Flash échoué ({str(e)}) et rollback échoué ({str(rollback_error)})"
+                }
+            
+            return {
+                "status": "error", 
+                "message": f"Erreur lors du flash: {str(e)}. Rollback effectué."
+            }
+    except ImportError:
+        logger.error("Bibliothèque de flashage ECU non disponible")
+        return {
+            "status": "error",
+            "message": "Bibliothèque de flashage ECU (ecu_flash_lib) non disponible. Veuillez installer le logiciel requis."
+        }
+    except Exception as e:
+        logger.error(f"Erreur lors de l'initialisation du contrôleur de flashage: {str(e)}")
+        return {
+            "status": "error",
+            "message": f"Erreur lors de la connexion à l'outil de flashage ECU: {str(e)}"
+        }
+
 class ECUFlashManager:
     """Gestionnaire de reprogrammation ECU"""
     
@@ -77,6 +220,24 @@ class ECUFlashManager:
         self.modified = False
         self.connection = None
         self.connected = False
+        self.flash_controller = None
+        
+        # Tenter d'initialiser le contrôleur de flash réel si disponible
+        try:
+            self.init_real_flash_controller()
+        except ImportError:
+            logger.warning("Bibliothèque ecu_flash_lib non disponible. Mode de simulation activé.")
+        except Exception as e:
+            logger.warning(f"Erreur lors de l'initialisation du contrôleur de flashage réel: {str(e)}")
+    
+    def init_real_flash_controller(self):
+        """Initialise le contrôleur de flashage ECU réel"""
+        try:
+            self.flash_controller = ECUFlashController()
+            logger.info("Contrôleur de flashage ECU réel initialisé avec succès")
+        except Exception as e:
+            logger.error(f"Erreur lors de l'initialisation du contrôleur de flashage: {str(e)}")
+            raise
     
     def load_config_file(self, file_path):
         """
@@ -334,7 +495,6 @@ class ECUFlashManager:
     def connect_ecu(self):
         """
         Établit une connexion avec l'ECU
-        (Simulation pour l'instant)
         
         Returns:
             dict: Résultat de la connexion
@@ -344,25 +504,100 @@ class ECUFlashManager:
                 "success": False,
                 "message": "ID de périphérique ECU non configuré dans .env"
             }
+        
+        try:
+            # Tenter d'utiliser le contrôleur réel si disponible
+            if self.flash_controller:
+                logger.info(f"Connexion réelle à l'ECU: {self.device_id} via {self.protocol}")
+                connection_result = self.flash_controller.connect(device_id=self.device_id, protocol=self.protocol)
+                
+                if connection_result.get('success'):
+                    self.connected = True
+                    self.connection = {
+                        "device_id": self.device_id, 
+                        "protocol": self.protocol,
+                        "interface": connection_result.get('interface', 'Unknown')
+                    }
+                    
+                    logger.info(f"Connecté à l'ECU via {self.connection.get('interface')}")
+                    
+                    return {
+                        "success": True,
+                        "message": f"Connecté à l'ECU",
+                        "device_id": self.device_id,
+                        "protocol": self.protocol,
+                        "interface": self.connection.get('interface')
+                    }
+                else:
+                    logger.error(f"Échec de connexion à l'ECU: {connection_result.get('message', 'Raison inconnue')}")
+                    return {
+                        "success": False,
+                        "message": f"Échec de connexion à l'ECU: {connection_result.get('message', 'Raison inconnue')}"
+                    }
+            else:
+                # Simulation de connexion
+                logger.info(f"Simulation de connexion à l'ECU: {self.device_id} via {self.protocol}")
+                time.sleep(1)  # Simuler un délai de connexion
+                
+                self.connected = True
+                self.connection = {"device_id": self.device_id, "protocol": self.protocol}
+                
+                logger.info("Connecté à l'ECU (simulation)")
+                
+                return {
+                    "success": True,
+                    "message": f"Connecté à l'ECU (simulation)",
+                    "device_id": self.device_id,
+                    "protocol": self.protocol
+                }
+        except Exception as e:
+            logger.error(f"Erreur lors de la connexion à l'ECU: {str(e)}")
+            return {
+                "success": False,
+                "message": f"Erreur lors de la connexion à l'ECU: {str(e)}"
+            }
+    
+    def flash_ecu_with_custom_params(self, tuning_parameters):
+        """
+        Flash l'ECU avec des paramètres personnalisés
+        
+        Args:
+            tuning_parameters (dict): Paramètres de tuning
             
-        # Simulation de connexion
-        logger.info(f"Tentative de connexion à l'ECU: {self.device_id} via {self.protocol}")
-        time.sleep(1)  # Simuler un délai de connexion
+        Returns:
+            dict: Résultat du flash
+        """
+        if not self.connected:
+            return {"error": "Non connecté à l'ECU"}
         
-        self.connected = True
-        self.connection = {"device_id": self.device_id, "protocol": self.protocol}
-        
-        return {
-            "success": True,
-            "message": f"Connecté à l'ECU (simulation)",
-            "device_id": self.device_id,
-            "protocol": self.protocol
-        }
+        # Utiliser la fonction indépendante pour le flashage réel
+        try:
+            if self.flash_controller:
+                logger.info(f"Utilisation du contrôleur réel pour flasher l'ECU avec {tuning_parameters}")
+                return flash_ecu(tuning_parameters)
+            else:
+                # Simulation de flash
+                logger.info(f"Simulation de flash avec paramètres: {tuning_parameters}")
+                is_valid, message = validate_tuning_parameters(tuning_parameters)
+                
+                if not is_valid:
+                    return {"status": "error", "message": message}
+                
+                time.sleep(2)  # Simuler un délai de flash
+                
+                return {
+                    "status": "success",
+                    "message": "ECU flashée avec succès (simulation)",
+                    "timestamp": time.time(),
+                    "new_configuration": tuning_parameters
+                }
+        except Exception as e:
+            logger.error(f"Erreur lors du flash ECU: {str(e)}")
+            return {"status": "error", "message": f"Erreur lors du flash ECU: {str(e)}"}
     
     def flash_ecu(self):
         """
         Flash l'ECU avec la configuration actuelle
-        (Simulation pour l'instant)
         
         Returns:
             dict: Résultat du flash
@@ -379,23 +614,61 @@ class ECUFlashManager:
                 "message": "Aucune modification à flasher"
             }
         
-        # Simulation de flash
-        logger.info("Démarrage du flash ECU (simulation)")
-        time.sleep(2)  # Simuler un délai de flash
-        
-        self.modified = False
-        
-        return {
-            "success": True,
-            "message": "ECU flashée avec succès (simulation)",
-            "timestamp": time.time(),
-            "vehicle": self.current_config.vehicle
-        }
+        try:
+            if self.flash_controller:
+                # Convertir la configuration Pydantic en dictionnaire pour le flashage
+                logger.info("Conversion de la configuration pour flashage réel")
+                config_dict = {}
+                
+                # Extraire les paramètres à flasher
+                for param_name, param in self.current_config.parameters.items():
+                    if param.editable:  # Ne flasher que les paramètres modifiables
+                        config_dict[param_name] = param.value
+                
+                # Flashage réel
+                logger.info(f"Flashage réel de l'ECU avec {len(config_dict)} paramètres")
+                flash_result = self.flash_controller.flash_configuration(config_dict)
+                
+                if flash_result.get('success'):
+                    self.modified = False
+                    logger.info("Flash réel réussi")
+                    
+                    return {
+                        "success": True,
+                        "message": "ECU flashée avec succès",
+                        "timestamp": time.time(),
+                        "vehicle": self.current_config.vehicle,
+                        "parameters_flashed": len(config_dict)
+                    }
+                else:
+                    logger.error(f"Échec du flash réel: {flash_result.get('message', 'Raison inconnue')}")
+                    return {
+                        "success": False,
+                        "message": f"Échec du flash: {flash_result.get('message', 'Raison inconnue')}"
+                    }
+            else:
+                # Simulation de flash
+                logger.info("Démarrage du flash ECU (simulation)")
+                time.sleep(2)  # Simuler un délai de flash
+                
+                self.modified = False
+                
+                return {
+                    "success": True,
+                    "message": "ECU flashée avec succès (simulation)",
+                    "timestamp": time.time(),
+                    "vehicle": self.current_config.vehicle
+                }
+        except Exception as e:
+            logger.error(f"Erreur lors du flash ECU: {str(e)}")
+            return {
+                "success": False,
+                "message": f"Erreur lors du flash ECU: {str(e)}"
+            }
     
     def read_ecu(self):
         """
         Lit la configuration actuelle de l'ECU
-        (Simulation pour l'instant)
         
         Returns:
             dict: Données lues de l'ECU
@@ -403,23 +676,60 @@ class ECUFlashManager:
         if not self.connected:
             return {"error": "Non connecté à l'ECU"}
         
-        # Simulation de lecture
-        logger.info("Lecture de l'ECU (simulation)")
-        time.sleep(1.5)  # Simuler un délai de lecture
-        
-        if self.current_config:
+        try:
+            if self.flash_controller:
+                # Lecture réelle de l'ECU
+                logger.info("Lecture réelle de l'ECU")
+                
+                # Utiliser l'API réelle pour lire la configuration
+                read_result = self.flash_controller.read_configuration()
+                
+                if read_result.get('success'):
+                    # Convertir la configuration lue en modèle Pydantic
+                    config_data = read_result.get('configuration', {})
+                    logger.info(f"Configuration lue: {len(config_data)} paramètres")
+                    
+                    # Mettre à jour la configuration interne
+                    # Note: ceci est simplifié, dans un cas réel il faudrait convertir
+                    # la structure retournée par l'API en notre modèle Pydantic
+                    self.current_config = config_data
+                    self.modified = False
+                    
+                    return {
+                        "success": True,
+                        "message": "Lecture de l'ECU réussie",
+                        "parameters_count": len(config_data)
+                    }
+                else:
+                    logger.error(f"Échec de lecture de l'ECU: {read_result.get('message', 'Raison inconnue')}")
+                    return {
+                        "success": False,
+                        "message": f"Échec de lecture de l'ECU: {read_result.get('message', 'Raison inconnue')}"
+                    }
+            else:
+                # Simulation de lecture
+                logger.info("Lecture de l'ECU (simulation)")
+                time.sleep(1.5)  # Simuler un délai de lecture
+                
+                if self.current_config:
+                    return {
+                        "success": True,
+                        "message": "Lecture de l'ECU réussie (simulation)",
+                        "vehicle": self.current_config.vehicle,
+                        "parameters_count": len(self.current_config.parameters),
+                        "maps_count": len(self.current_config.maps)
+                    }
+                else:
+                    return {
+                        "success": True,
+                        "message": "Lecture de l'ECU réussie, mais aucune donnée (simulation)",
+                        "vehicle": {"make": "Simulation", "model": "Test", "year": "2025"}
+                    }
+        except Exception as e:
+            logger.error(f"Erreur lors de la lecture de l'ECU: {str(e)}")
             return {
-                "success": True,
-                "message": "Lecture de l'ECU réussie (simulation)",
-                "vehicle": self.current_config.vehicle,
-                "parameters_count": len(self.current_config.parameters),
-                "maps_count": len(self.current_config.maps)
-            }
-        else:
-            return {
-                "success": True,
-                "message": "Lecture de l'ECU réussie, mais aucune donnée (simulation)",
-                "vehicle": {"make": "Simulation", "model": "Test", "year": "2025"}
+                "success": False,
+                "message": f"Erreur lors de la lecture de l'ECU: {str(e)}"
             }
 
 # Exemple d'utilisation
@@ -454,6 +764,14 @@ def main():
             ecu_manager.modified = True  # Simuler des modifications
             flash_result = ecu_manager.flash_ecu()
             print(f"\nRésultat du flash: {flash_result['message']}")
+            
+            # Tester le flash avec des paramètres personnalisés
+            tuning_params = {
+                "cartographie_injection": 105,
+                "boost_turbo": 1.1
+            }
+            custom_flash_result = ecu_manager.flash_ecu_with_custom_params(tuning_params)
+            print(f"\nRésultat du flash personnalisé: {custom_flash_result['message']}")
             
     else:
         print(f"Fichier de test non trouvé: {test_config}")
