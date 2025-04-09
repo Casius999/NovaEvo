@@ -26,24 +26,156 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 ## Installation
 
 ### Prérequis
-- Python 3.8+
-- Node.js 14+
-- Docker
-- Accès à un dongle OBD-II compatible
+- Python 3.10+
+- Node.js 18+
+- Docker et Docker Compose
+- Accès à un dongle OBD-II compatible (optionnel pour le développement)
+- Clés API pour Google Cloud Vision (OCR) et OpenAI (NLP)
 
-### Installation rapide
+### Installation avec environnement virtuel Python
+
+1. **Cloner le dépôt**
 ```bash
-# Cloner le dépôt
 git clone https://github.com/Casius999/assistant-auto-ultime.git
 cd assistant-auto-ultime
-
-# Installer les dépendances
-pip install -r requirements.txt
-cd frontend && npm install && cd ..
-
-# Lancer l'application en mode développement
-docker-compose up
 ```
+
+2. **Créer et activer un environnement virtuel**
+```bash
+# Linux/macOS
+python -m venv venv
+source venv/bin/activate
+
+# Windows
+python -m venv venv
+venv\Scripts\activate
+```
+
+3. **Installer les dépendances backend**
+```bash
+pip install -r requirements.txt
+```
+
+4. **Configurer les variables d'environnement**
+```bash
+cp .env.example .env
+# Éditez le fichier .env avec vos clés API et configurations
+```
+
+5. **Installer les dépendances frontend**
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+6. **Démarrer l'application en mode développement**
+```bash
+# Terminal 1: Backend
+python app.py
+
+# Terminal 2: Frontend
+cd frontend
+npm start
+```
+
+### Installation avec Docker
+
+Pour un déploiement complet avec Docker :
+
+1. **Cloner le dépôt**
+```bash
+git clone https://github.com/Casius999/assistant-auto-ultime.git
+cd assistant-auto-ultime
+```
+
+2. **Configurer les variables d'environnement**
+```bash
+cp .env.example .env
+# Éditez le fichier .env avec vos clés API et configurations
+```
+
+3. **Lancer avec Docker Compose**
+```bash
+docker-compose up -d
+```
+
+L'application sera disponible sur :
+- Backend API: http://localhost:5000
+- Frontend: http://localhost:3000
+
+## Utilisation des modules
+
+### OCR - Reconnaissance de Carte Grise
+Ce module utilise Google Cloud Vision pour scanner et extraire les informations d'une carte grise.
+```python
+from ocr import OCRProcessor
+
+# Initialiser le module OCR
+ocr = OCRProcessor()
+
+# Traiter une image
+result = ocr.process_image(image_path="path/to/image.jpg")
+vehicle_info = ocr.extract_vehicle_info(result)
+print(vehicle_info)
+```
+
+### OBD-II - Diagnostic Véhicule
+Module de connexion avec un dongle OBD-II pour obtenir des informations en temps réel du véhicule.
+```python
+from obd2 import OBDManager
+
+# Initialiser le gestionnaire OBD
+obd_manager = OBDManager()
+
+# Se connecter au véhicule
+obd_manager.connect()
+
+# Obtenir le RPM actuel
+rpm = obd_manager.get_rpm()
+print(f"RPM actuel: {rpm}")
+
+# Lire les codes d'erreur
+codes = obd_manager.get_dtc_codes()
+print(f"Codes d'erreur: {codes}")
+```
+
+### NLP - Assistant Langage Naturel
+Module de traitement du langage naturel permettant d'interpréter des questions et commandes en langage courant.
+```python
+from nlp import AutoAssistantNLP
+
+# Initialiser l'assistant NLP
+nlp = AutoAssistantNLP()
+
+# Interpréter une requête
+result = nlp.interpret_command("Que signifie le code erreur P0300 ?")
+print(result)
+```
+
+### Tests unitaires
+Pour exécuter les tests unitaires :
+```bash
+# Installer pytest
+pip install pytest
+
+# Lancer les tests
+pytest
+```
+
+## API Rest
+
+L'application expose les endpoints principaux suivants :
+
+- `GET /` - Page d'accueil / Statut de l'API
+- `POST /ocr` - Analyse OCR d'une image
+- `GET /obd2` - Récupère les données OBD-II
+- `POST /nlp` - Interprète une requête en langage naturel
+- `POST /image_recognition` - Analyse une image pour diagnostic
+- `GET /ecu_flash` - Récupère les cartographies disponibles
+- `GET /parts_finder` - Recherche de pièces détachées
+
+Consultez la documentation complète de l'API dans le dossier `/docs`.
 
 ## Contribution
 Veuillez consulter le fichier [CONTRIBUTING.md](CONTRIBUTING.md) pour les détails sur notre code de conduite et le processus de soumission des pull requests.
