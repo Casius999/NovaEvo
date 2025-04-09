@@ -1,5 +1,5 @@
 """
-Assistant Auto Ultime - Application Principale
+NovaEvo - Application Principale
 """
 import os
 import json
@@ -26,13 +26,13 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Configuration du logging
 log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
-log_file = os.getenv('LOG_FILE', 'logs/auto_assistant.log')
+log_file = os.getenv('LOG_FILE', 'logs/novaevo.log')
 
 # Créer le dossier de logs si nécessaire
 os.makedirs(os.path.dirname(log_file), exist_ok=True)
 
 # Configuration du logger
-logger = logging.getLogger('assistant_auto')
+logger = logging.getLogger('novaevo')
 logger.setLevel(getattr(logging, log_level))
 
 # Handler pour le fichier
@@ -84,7 +84,7 @@ def index():
     """Route principale - Page d'accueil"""
     return jsonify({
         'status': 'success',
-        'message': 'API Assistant Auto Ultime opérationnelle',
+        'message': 'API NovaEvo opérationnelle',
         'modules': [
             '/ocr', '/obd2', '/nlp', '/image_recognition', 
             '/ecu_flash', '/parts_finder', '/subscriptions', '/mapping_affiliations',
@@ -713,7 +713,7 @@ def mapping_affiliations_endpoint():
                 "preparateur": "TuningBox France",
                 "description": "Cartographie Stage 1 pour moteurs TSI 2.0L",
                 "price": "249.90€",
-                "affiliate_link": "https://tuningbox-france.com/cart/stage1-tsi?ref=assistant-auto",
+                "affiliate_link": "https://tuningbox-france.com/cart/stage1-tsi?ref=novaevo",
                 "category": category or "sport",
                 "source": "API Partenaire"
             },
@@ -721,7 +721,7 @@ def mapping_affiliations_endpoint():
                 "preparateur": "DigiTech Performance",
                 "description": "Reprogrammation origine pour économie de carburant",
                 "price": "189.00€",
-                "affiliate_link": "https://digitech-perf.fr/eco?ref=auto-assistant",
+                "affiliate_link": "https://digitech-perf.fr/eco?ref=novaevo",
                 "category": category or "origine",
                 "source": "Facebook Marketplace"
             }
@@ -836,7 +836,7 @@ def send_feedback_notification(feedback_data):
     message = MIMEMultipart()
     message['From'] = sender
     message['To'] = ', '.join(recipients)
-    message['Subject'] = f"[Assistant Auto] Nouveau feedback: {feedback_data['type']}"
+    message['Subject'] = f"[NovaEvo] Nouveau feedback: {feedback_data['type']}"
     
     body = f"""
     Nouveau feedback reçu:
