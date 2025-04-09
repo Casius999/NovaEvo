@@ -9,17 +9,17 @@ Ce document présente l'analyse du marché potentiel pour Assistant Auto Ultime,
 ### 1.1 Analyse du Marché Adressable
 
 | Niveau | Définition | Taille Europe (estimée) | Taille Mondiale (estimée) | TCAC Projeté (2025-2030) |
-|--------|------------|-------------------------|---------------------------|--------------------------|
+|--------|------------|-------------------------|---------------------------|-----------------------------|
 | TAM (Total Addressable Market) | Tous propriétaires de véhicules avec smartphone | 12.5 Mds€ | 38.4 Mds€ | 16.5% |
 | SAM (Serviceable Available Market) | Conducteurs technophiles, DIY, passionnés | 4.8 Mds€ | 13.6 Mds€ | 18.8% |
-| SOM (Serviceable Obtainable Market) | Cible réaliste à 5 ans | 280 M€ | 480 M€ | - |
+| SOM (Serviceable Obtainable Market) | Cible réaliste à 5 ans | 180 M€ | 320 M€ | - |
 
 > *Cette analyse est basée sur les études de marché disponibles concernant le parc automobile européen (environ 280M de véhicules) et les taux d'adoption des applications mobiles dans ce secteur.*
 
 ### 1.2 Dynamique de Croissance Sectorielle Observée
 
 | Secteur | TCAC Observé | Tendances Actuelles | Opportunité pour notre Solution |
-|---------|--------------|---------------------|--------------------------------|
+|---------|--------------|---------------------|----------------------------------|
 | Applications Automobile | 19.8% | Complexité croissante véhicules, démocratisation DIY | Plateforme intégrée tout-en-un |
 | Diagnostics OBD-II | 16.5% | Véhicules plus électroniques, intérêt entretien proactif | Diagnostic avancé et personnalisé |
 | Cartographie ECU | 24.2% | Performance, économie carburant, personnalisation | Bibliothèque de cartographies |
@@ -33,15 +33,15 @@ Ce document présente l'analyse du marché potentiel pour Assistant Auto Ultime,
 
 | Segment | Taille Estimée (Europe) | Caractéristiques | CAC Estimé | LTV Projetée |
 |---------|-------------------------|------------------|------------|--------------|
-| Passionnés Automobile | 7.2M | Forte expertise, tuning, recherche performance | 42€ | 520€ |
-| Propriétaires DIY | 15.8M | Maintenance basique, économie, véhicules >5 ans | 38€ | 420€ |
-| Conducteurs Technophiles | 12.5M | Early adopters, gadgets, expérience connectée | 45€ | 480€ |
-| Indépendants & Garages | 350K | Réparations multiples, diagnostics récurrents | 160€ | 1,800€ |
+| Passionnés Automobile | 7.2M | Forte expertise, tuning, recherche performance | 48€ | 420€ |
+| Propriétaires DIY | 15.8M | Maintenance basique, économie, véhicules >5 ans | 42€ | 350€ |
+| Conducteurs Technophiles | 12.5M | Early adopters, gadgets, expérience connectée | 50€ | 380€ |
+| Indépendants & Garages | 350K | Réparations multiples, diagnostics récurrents | 120€ | 750€ |
 
 ### 2.2 Besoins Identifiés par Segment
 
 | Segment | Besoins Prioritaires | Proposition de Valeur |
-|---------|----------------------|------------------------|
+|---------|----------------------|--------------------------|
 | Passionnés Automobile | Cartographie, tuning, data technique | Outils avancés et précis de modification moteur |
 | Propriétaires DIY | Diagnostics clairs, guides réparation | Simplification des diagnostics complexes |
 | Conducteurs Technophiles | UI moderne, intégrations, automatisation | Expérience utilisateur premium et connectée |
@@ -64,12 +64,12 @@ Ce document présente l'analyse du marché potentiel pour Assistant Auto Ultime,
 ### 3.2 Avantages Compétitifs Envisagés
 
 | Dimension | Avantage Potentiel | Différenciation |
-|-----------|---------------------|-----------------|
+|-----------|---------------------|----------------|
 | **Plateforme Intégrée** | 7 modules en une seule app vs solutions fragmentées | Solution tout-en-un évitant de jongler entre applications |
 | **IA de Diagnostic** | Analyse intelligente des codes d'erreur et données | Exploitation des données pour recommandations personnalisées |
 | **Base Données Véhicules** | Large couverture des modèles et cartographies | Compatibilité étendue avec la majorité du parc automobile |
 | **Reconnaissance Visuelle** | Identification des pièces par photo | Simplification significative de la recherche de pièces |
-| **Système d'Affiliation** | Capture complète des transactions | Recommandations pertinentes et génération de revenus |
+| **Système d'Affiliation** | Capture des transactions | Recommandations pertinentes et génération de revenus |
 
 > *L'analyse concurrentielle révèle un marché fragmenté avec des acteurs spécialisés mais sans solution véritablement intégrée couvrant l'ensemble des besoins.*
 
@@ -78,22 +78,21 @@ Ce document présente l'analyse du marché potentiel pour Assistant Auto Ultime,
 ### 4.1 Approche de Go-To-Market Proposée
 
 | Canal | CAC Estimé | Contribution Visée | Stratégie |
-|-------|------------|---------------------|-----------|
-| Marketing Performance | 45€ | 35% | Ciblage précis des segments à forte intention |
-| SEO & Content | 28€ | 20% | Contenu technique valorisé et éducatif |
-| Partenariats | 32€ | 25% | Collaborations avec acteurs de l'écosystème |
-| Communauté & Influence | 38€ | 15% | Ambassadeurs et early adopters |
-| Programme Parrainage | 22€ | 5% | Incitation au partage et à la recommandation |
+|-------|------------|---------------------|----------|
+| Marketing Performance | 48€ | 35% | Ciblage précis des segments à forte intention |
+| SEO & Content | 32€ | 20% | Contenu technique valorisé et éducatif |
+| Partenariats | 38€ | 25% | Collaborations avec acteurs de l'écosystème |
+| Communauté & Influence | 42€ | 15% | Ambassadeurs et early adopters |
+| Programme Parrainage | 28€ | 5% | Incitation au partage et à la recommandation |
 
 ### 4.2 Expansion Internationale Planifiée
 
 | Phase | Timing Projeté | Marchés | Population Cible | Investissement Estimé |
 |-------|----------------|---------|------------------|----------------------|
 | Phase 1 | Lancement | France | 12.8M conducteurs | 350K€ |
-| Phase 2 | Y1-Q3 | Allemagne, Italie | 38.5M conducteurs | 450K€ |
-| Phase 3 | Y2-Q1 | Espagne, UK, Benelux | 42.2M conducteurs | 520K€ |
-| Phase 4 | Y2-Q3 | Scandinavie, Suisse, Autriche | 15.8M conducteurs | 380K€ |
-| Phase 5 | Y3-Q1 | Europe Est, Amérique Nord | 95.5M conducteurs | 750K€ |
+| Phase 2 | Y2-Q1 | Allemagne, Italie | 38.5M conducteurs | 450K€ |
+| Phase 3 | Y2-Q4 | Espagne, UK, Benelux | 42.2M conducteurs | 520K€ |
+| Phase 4 | Y3-Q3 | Scandinavie, Suisse, Autriche | 15.8M conducteurs | 380K€ |
 
 > *Cette stratégie d'expansion séquentielle permettra de valider le modèle sur chaque marché avant d'investir dans le suivant.*
 
@@ -101,10 +100,11 @@ Ce document présente l'analyse du marché potentiel pour Assistant Auto Ultime,
 
 | Source de Revenus | Y1 | Y2 | Y3 | Stratégie |
 |-------------------|----|----|----|-----------| 
-| Abonnements | 350K€ | 1.4M€ | 3.2M€ | Modèle freemium avec conversion progressive |
-| Affiliation | 50K€ | 200K€ | 450K€ | Partenariats avec distributeurs et fabricants |
-| Services B2B | 0€ | 25K€ | 85K€ | Offres spécifiques pour professionnels |
-| API & Tech | 0€ | 20K€ | 60K€ | Licence technologie pour partenaires |
+| Abonnements | 180K€ | 850K€ | 2,100K€ | Modèle freemium avec conversion progressive |
+| Affiliation | 35K€ | 120K€ | 320K€ | Partenariats avec distributeurs et fabricants |
+| Services B2B | 0€ | 15K€ | 45K€ | Services pour professionnels |
+| API & Tech | 0€ | 10K€ | 40K€ | Licence technologie pour partenaires |
+| **Total** | **215K€** | **995K€** | **2,505K€** | |
 
 > *Cette diversification des revenus créera un modèle économique résilient face aux fluctuations du marché.*
 
@@ -137,25 +137,24 @@ Ce document présente l'analyse du marché potentiel pour Assistant Auto Ultime,
 
 | Direction | Taille Marché Estimée | Timeline Envisagée | Synergie |
 |-----------|----------------------|---------------------|---------|
-| **Assistant Deux Roues & Quads** | 1.5 Mds€ | Y1-Q4 | Réutilisation technologie core |
-| **Fleet Intelligence Platform** | 2.0 Mds€ | Y2-Q2 | Extension B2B naturelle |
-| **Dealer Management System** | 1.0 Mds€ | Y2-Q4 | Exploitation données et réseau |
-| **Insurance Analytics Platform** | 2.8 Mds€ | Y3-Q2 | Valorisation données collectées |
+| **Assistant Deux Roues & Quads** | 1.5 Mds€ | Y2-Q3 | Réutilisation technologie core |
+| **B2B Services** | 0.8 Mds€ | Y3-Q1 | Extension naturelle pour professionnels |
+| **Dealer Management System** | 1.0 Mds€ | Y3-Q4 | Exploitation données et réseau |
 
 ### 6.2 Vision Stratégique à 5 Ans
 
-Vision 2030: **Devenir la plateforme de référence européenne pour l'écosystème automobile connecté**
+Vision 2030: **Établir une position solide sur le marché européen des solutions connectées pour l'automobile**
 
 | Dimension | Objectif 2030 | Stratégie |
 |-----------|---------------|-----------|
-| **Base Utilisateurs** | 8-10M utilisateurs | Expansion progressive et rétention |
-| **Revenus Annuels** | 120-150M€ | Diversification et montée en gamme |
-| **Leadership Technologique** | 10+ brevets | Investissement R&D continu |
-| **Écosystème Partenaires** | 150+ partenaires stratégiques | Approche API-first et marketplace |
+| **Base Utilisateurs** | 250-300K utilisateurs payants | Expansion progressive et rétention |
+| **Revenus Annuels** | 25-30M€ | Diversification et montée en gamme |
+| **Présence Géographique** | 8-10 pays européens | Expansion internationale contrôlée |
+| **Écosystème Partenaires** | 50+ partenaires stratégiques | Approche collaborative et marketplace |
 
 ## 7. Pourquoi Maintenant?
 
-Le timing de marché actuel présente une fenêtre d'opportunité unique basée sur plusieurs facteurs convergents:
+Le timing de marché actuel présente une fenêtre d'opportunité intéressante basée sur plusieurs facteurs convergents:
 
 1. **Maturité technologique** - L'IA, l'IoT et la connectivité mobile atteignent le niveau de performance et de coût optimal pour notre solution
 
