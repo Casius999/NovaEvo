@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: assistant-auto-ingress
+  name: novaevo-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -19,28 +19,28 @@ metadata:
 spec:
   tls:
   - hosts:
-    - app.assistant-auto-ultime.com
-    - api.assistant-auto-ultime.com
-    secretName: assistant-auto-tls
+    - app.novaevo.com
+    - api.novaevo.com
+    secretName: novaevo-tls
   rules:
-  - host: api.assistant-auto-ultime.com
+  - host: api.novaevo.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: assistant-auto-backend
+            name: novaevo-backend
             port:
               number: 5000
-  - host: app.assistant-auto-ultime.com
+  - host: app.novaevo.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: assistant-auto-frontend
+            name: novaevo-frontend
             port:
               number: 3000
 ---
@@ -51,7 +51,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: admin@assistant-auto-ultime.com
+    email: admin@novaevo.com
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
