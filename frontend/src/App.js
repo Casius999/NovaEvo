@@ -17,6 +17,9 @@ import Auth from './components/Auth';
 import Subscriptions from './components/Subscriptions';
 import MappingAffiliations from './components/MappingAffiliations';
 
+// Import du composant Feedback pour l'étape 11
+import Feedback from './components/Feedback';
+
 // Page d'accueil avec des cartes pour chaque module
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -160,6 +163,13 @@ const Home = () => {
           </Card>
         </Col>
       </Row>
+      
+      {/* Ajout du composant Feedback pour l'étape 11 */}
+      <Row className="mt-5">
+        <Col md={8} className="mx-auto">
+          <Feedback />
+        </Col>
+      </Row>
     </Container>
   );
 };
@@ -239,6 +249,9 @@ function App() {
               
               {/* Nouveaux liens pour l'étape 10 */}
               <Nav.Link as={Link} to="/subscriptions" className="text-primary">Abonnements</Nav.Link>
+              
+              {/* Nouveau lien pour le feedback (étape 11) */}
+              <Nav.Link as={Link} to="/feedback" className="text-warning">Feedback</Nav.Link>
             </Nav>
             
             {isAuthenticated ? (
@@ -282,6 +295,22 @@ function App() {
         <Route path="/subscriptions" element={<Subscriptions />} />
         <Route path="/mapping-affiliations" element={isAuthenticated ? <MappingAffiliations /> : <Navigate to="/auth" />} />
         
+        {/* Nouvelle route dédiée au feedback (étape 11) */}
+        <Route path="/feedback" element={
+          <Container className="py-5">
+            <Row>
+              <Col md={8} className="mx-auto">
+                <h2 className="mb-4 text-center">Votre avis compte</h2>
+                <p className="text-center mb-5">
+                  Nous travaillons constamment à améliorer Assistant Auto Ultime. 
+                  Partagez vos impressions, signalez des bugs ou proposez des améliorations !
+                </p>
+                <Feedback />
+              </Col>
+            </Row>
+          </Container>
+        } />
+        
         {/* Redirection par défaut */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
@@ -300,6 +329,7 @@ function App() {
               <Nav className="flex-column">
                 <Nav.Link as={Link} to="/subscriptions" className="text-muted p-0 mb-1">Offres & Tarifs</Nav.Link>
                 <Nav.Link as={Link} to="/mapping-affiliations" className="text-muted p-0 mb-1">Cartographies Pro</Nav.Link>
+                <Nav.Link as={Link} to="/feedback" className="text-muted p-0 mb-1">Donnez votre avis</Nav.Link>
                 <Nav.Link href="#" className="text-muted p-0 mb-1">Devenir Partenaire</Nav.Link>
               </Nav>
             </Col>
