@@ -2,7 +2,7 @@
 
 ## Résumé Exécutif
 
-Ce document présente le plan financier prévisionnel d'Assistant Auto Ultime sur une période de 3 ans. Notre projet, actuellement en phase de pré-développement, repose sur une stratégie qui vise à combiner croissance et rentabilité à moyen terme. L'objectif est d'atteindre le point mort à l'horizon T+24 mois après le lancement commercial, sur la base de projections réalistes et d'hypothèses validées par des études de marché.
+Ce document présente le plan financier prévisionnel d'Assistant Auto Ultime sur une période de 3 ans. Notre projet, actuellement en phase de pré-développement, repose sur une stratégie qui vise à combiner croissance et rentabilité à moyen terme. L'objectif est d'atteindre le point mort à l'horizon T+27 mois après le lancement commercial, sur la base de projections réalistes et d'hypothèses validées par des études de marché.
 
 ## 1. Projections de Revenus
 
@@ -10,23 +10,23 @@ Ce document présente le plan financier prévisionnel d'Assistant Auto Ultime su
 
 | Formule | Prix Mensuel | Prix Annuel (économie 10%) | Coût d'Acquisition Client Estimé (CAC) |
 |---------|--------------|----------------------------|----------------------------------------|
-| Standard | 19,90€/mois | 215,00€/an | 38,00€ (estimation) |
-| Premium | 29,90€/mois | 323,00€/an | 52,00€ (estimation) |
+| Standard | 19,90€/mois | 215,00€/an | 45,00€ (estimation) |
+| Premium | 29,90€/mois | 323,00€/an | 62,00€ (estimation) |
 
 **Projections d'utilisateurs (scénario modéré):**
 
 | Période | Standard | Premium | Total | Répartition |
 |---------|----------|---------|-------|-------------|
-| Fin Année 1 | 1,450 | 550 | 2,000 | 72%/28% |
-| Fin Année 2 | 4,200 | 1,800 | 6,000 | 70%/30% |
-| Fin Année 3 | 8,000 | 4,000 | 12,000 | 67%/33% |
+| Fin Année 1 | 850 | 250 | 1,100 | 77%/23% |
+| Fin Année 2 | 2,800 | 900 | 3,700 | 76%/24% |
+| Fin Année 3 | 5,500 | 2,200 | 7,700 | 71%/29% |
 
 **Objectifs de rétention et valeur vie client (CLV) estimée:**
 
 | Formule | Objectif taux de churn mensuel | CLV estimée (36 mois) |
 |---------|-------------------------------|------------------------|
-| Standard | 4.0% | 350,00€ |
-| Premium | 3.5% | 610,00€ |
+| Standard | 4.5% | 320,00€ |
+| Premium | 4.0% | 550,00€ |
 
 ### 1.2 Revenus d'Affiliation Potentiels
 
@@ -34,16 +34,16 @@ Notre système d'affiliation visera à générer des revenus complémentaires pa
 
 | Période | Transactions Mensuelles Ciblées | Commission Moyenne Estimée | Revenu Mensuel Potentiel |
 |---------|--------------------------------|----------------------------|--------------------------|
-| Mois 12 | 200-300 | 8.5% | 4,000-7,000€ |
-| Mois 24 | 500-700 | 9.5% | 12,000-20,000€ |
-| Mois 36 | 1000-1400 | 11.0% | 30,000-45,000€ |
+| Mois 12 | 120-180 | 7.5% | 2,500-4,000€ |
+| Mois 24 | 300-450 | 8.5% | 7,000-12,000€ |
+| Mois 36 | 650-850 | 9.5% | 18,000-26,000€ |
 
 ### 1.3 Autres Sources de Revenus Envisagées
 
 | Source | Année 1 | Année 2 | Année 3 |
-|--------|---------|---------|---------| 
-| Partenariats API | 0€ | 25,000€ | 60,000€ |
-| Services Premium B2B | 0€ | 20,000€ | 85,000€ |
+|--------|---------|---------|---------|
+| Partenariats API | 0€ | 15,000€ | 40,000€ |
+| Services Premium B2B | 0€ | 10,000€ | 45,000€ |
 
 ## 2. Estimations des Coûts et Dépenses
 
@@ -82,8 +82,8 @@ Nous prévoyons d'optimiser cette infrastructure pour réduire les coûts:
 | SEM/Publicité | 15,000€/mois | 8,000€/mois | Ciblage précis + A/B testing |
 
 **Objectifs de réduction du CAC:**
-- CAC initial estimé: 48€ → CAC optimisé visé: 38€ (-21%)
-- Délai de récupération du CAC visé: 3.8 mois
+- CAC initial estimé: 45€ → CAC optimisé visé: 36€ (-20%)
+- Délai de récupération du CAC visé: 4.2 mois
 
 ## 3. Stratégie d'Externalisation Envisagée
 
@@ -107,37 +107,37 @@ Nous prévoyons d'optimiser cette infrastructure pour réduire les coûts:
 ### 4.1 Compte de Résultat Prévisionnel (€)
 
 | | Année 1 | Année 2 | Année 3 |
-|---|---------|---------|---------| 
+|---|---------|---------|---------|
 | **Revenus** | | | |
-| Abonnements | 350,000 | 1,400,000 | 3,200,000 |
-| Affiliation | 50,000 | 200,000 | 450,000 |
-| Autres revenus | 0 | 45,000 | 145,000 |
-| **Total Revenus** | **400,000** | **1,645,000** | **3,795,000** |
+| Abonnements | 180,000 | 850,000 | 2,100,000 |
+| Affiliation | 35,000 | 120,000 | 320,000 |
+| Autres revenus | 0 | 25,000 | 85,000 |
+| **Total Revenus** | **215,000** | **995,000** | **2,505,000** |
 | | | | |
 | **Coûts** | | | |
-| Développement | 450,000 | 240,000 | 280,000 |
-| Infrastructure | 35,000 | 60,000 | 85,000 |
-| Marketing | 180,000 | 350,000 | 420,000 |
-| Personnel | 220,000 | 380,000 | 550,000 |
-| Autres coûts | 65,000 | 95,000 | 140,000 |
-| **Total Coûts** | **950,000** | **1,125,000** | **1,475,000** |
+| Développement | 380,000 | 210,000 | 255,000 |
+| Infrastructure | 40,000 | 65,000 | 90,000 |
+| Marketing | 150,000 | 280,000 | 350,000 |
+| Personnel | 190,000 | 340,000 | 480,000 |
+| Autres coûts | 55,000 | 85,000 | 125,000 |
+| **Total Coûts** | **815,000** | **980,000** | **1,300,000** |
 | | | | |
-| **EBITDA** | **-550,000** | **520,000** | **2,320,000** |
-| Marge EBITDA | -137.5% | 31.6% | 61.1% |
+| **EBITDA** | **-600,000** | **15,000** | **1,205,000** |
+| Marge EBITDA | -279.1% | 1.5% | 48.1% |
 
 ### 4.2 Point Mort Projeté
 
-- **Point mort visé**: 24 mois
-- **Cash-flow cumulé positif estimé**: Mois 28
+- **Point mort visé**: 27 mois
+- **Cash-flow cumulé positif estimé**: Mois 32
 
 ### 4.3 Métriques Clés Projetées
 
 | Métrique | Année 1 | Année 2 | Année 3 |
-|----------|---------|---------|---------| 
-| CAC estimé | 38.00€ | 35.00€ | 32.00€ |
-| LTV:CAC Ratio visé | 9.2:1 | 11.5:1 | 15.2:1 |
-| Croissance MRR estimée | +22%/mois | +15%/mois | +10%/mois |
-| Marge brute projetée | 78% | 82% | 85% |
+|----------|---------|---------|---------|
+| CAC estimé | 45.00€ | 40.00€ | 36.00€ |
+| LTV:CAC Ratio visé | 7.5:1 | 9.2:1 | 11.5:1 |
+| Croissance MRR estimée | +15%/mois | +12%/mois | +8%/mois |
+| Marge brute projetée | 75% | 78% | 82% |
 
 ## 5. Stratégie de Levée de Fonds Proposée
 
@@ -192,7 +192,7 @@ Nous prévoyons d'optimiser cette infrastructure pour réduire les coûts:
 
 ## 8. Conclusion
 
-Les projections financières présentées démontrent le potentiel de rentabilité d'Assistant Auto Ultime, avec un point mort estimé à 24 mois après lancement commercial et une forte croissance projetée. Notre plan de développement repose sur une gestion rigoureuse des ressources et un investissement stratégique dans les technologies propriétaires qui constitueront notre avantage concurrentiel.
+Les projections financières présentées démontrent le potentiel de rentabilité d'Assistant Auto Ultime, avec un point mort estimé à 27 mois après lancement commercial et une croissance progressive mais solide. Notre plan de développement repose sur une gestion rigoureuse des ressources et un investissement stratégique dans les technologies propriétaires qui constitueront notre avantage concurrentiel.
 
 Ce plan financier sera affiné et ajusté au fur et à mesure que nous avancerons dans les phases de développement et de test marché, avec une volonté constante d'optimiser notre modèle économique.
 
