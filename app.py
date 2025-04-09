@@ -28,7 +28,7 @@ from obd2.obd_main import OBDManager
 from nlp.nlp_main import AutoAssistantNLP
 from image_recognition.image_recognition_main import ImageRecognitionEngine, detect_labels
 from ecu_flash.ecu_flash_main import flash_ecu, ECUFlashManager
-# from parts_finder import parts_finder_main
+from parts_finder.parts_finder_main import PartsFinderManager, search_parts
 
 # Initialiser les gestionnaires des modules
 ocr_processor = OCRProcessor()
@@ -36,6 +36,7 @@ obd_manager = OBDManager()
 nlp_assistant = AutoAssistantNLP()
 image_recognition_engine = ImageRecognitionEngine()
 ecu_flash_manager = ECUFlashManager()
+parts_finder_manager = PartsFinderManager()
 
 # Routes principales
 
@@ -398,15 +399,128 @@ def ecu_flash_parameters_endpoint():
         'parameters': SECURE_LIMITS
     })
 
-@app.route('/parts_finder', methods=['GET'])
+@app.route('/parts_finder', methods=['POST'])
 def parts_finder_endpoint():
-    """Endpoint pour le module de recherche de pièces"""
-    part_type = request.args.get('type', 'all')
-    return jsonify({
-        'status': 'success',
-        'message': f'Recherche de pièces de type: {part_type}',
-        'endpoint': '/parts_finder'
-    })
+    """
+    Endpoint pour le module de recherche de pièces
+    
+    Accepte une requête POST contenant reference et type, effectue la recherche
+    multi-sources et retourne les résultats
+    """
+    # Vérifier si les données sont présentes dans la requête
+    if not request.is_json:
+        return jsonify({
+            'status': 'error',
+            'message': 'Requête invalide. Veuillez envoyer un JSON avec les paramètres requis.'
+        }), 400
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({
+            'status': 'error',
+            'message': 'Aucune donnée fournie.'
+        }), 400
+    
+    reference = data.get("reference")
+    type_piece = data.get("type")
+    
+    if not reference or not type_piece:
+        return jsonify({
+            'status': 'error',
+            'message': 'Les paramètres "reference" et "type" sont obligatoires.'
+        }), 400
+    
+    # Lancer la recherche multi-sources
+    try:
+        offers = search_parts(reference, type_piece)
+        
+        # Vérifier s'il y a des erreurs
+        errors = [offer for offer in offers if "error" in offer]
+        if errors and len(errors) == len(offers):
+            # Toutes les recherches ont échoué
+            return jsonify({
+                'status': 'error',
+                'message': 'Toutes les recherches ont échoué',
+                'errors': errors
+            }), 500
+        
+        # Filtrer les erreurs avant de retourner les résultats
+        offers = [offer for offer in offers if "error" not in offer]
+        
+        return jsonify({
+            'status': 'success',
+            'count': len(offers),
+            'reference': reference,
+            'type': type_piece,
+            'offers': offers
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de la recherche de pièces: {str(e)}'
+        }), 500
+
+@app.route('/parts_finder/local', methods=['GET'])
+def parts_finder_local_endpoint():
+    """
+    Endpoint pour la recherche de pièces dans la base de données locale
+    """
+    # Extraire les paramètres de requête
+    manufacturer = request.args.get('manufacturer')
+    model = request.args.get('model')
+    category = request.args.get('category')
+    part_type = request.args.get('type')
+    keyword = request.args.get('keyword')
+    reference = request.args.get('reference')
+    
+    try:
+        # Rechercher dans la base locale
+        results = parts_finder_manager.search_parts_local(
+            manufacturer=manufacturer,
+            model=model,
+            category=category,
+            part_type=part_type,
+            keyword=keyword,
+            reference=reference
+        )
+        
+        return jsonify(results)
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de la recherche locale: {str(e)}'
+        }), 500
+
+@app.route('/parts_finder/detail', methods=['GET'])
+def parts_finder_detail_endpoint():
+    """
+    Endpoint pour obtenir les détails d'une pièce spécifique
+    """
+    part_id = request.args.get('id')
+    reference = request.args.get('reference')
+    
+    if not part_id and not reference:
+        return jsonify({
+            'status': 'error',
+            'message': 'ID ou référence de pièce requis.'
+        }), 400
+    
+    try:
+        # Récupérer les détails
+        result = parts_finder_manager.get_part_details(
+            part_id=int(part_id) if part_id else None,
+            reference=reference
+        )
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de la récupération des détails: {str(e)}'
+        }), 500
 
 # Fonction principale
 if __name__ == '__main__':
