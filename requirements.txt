@@ -3,6 +3,8 @@
 # Backend Framework
 flask==2.3.3
 flask-cors==4.0.0
+flask-login==0.6.3
+flask-sqlalchemy==3.1.1
 gunicorn==21.2.0
 
 # Image Recognition
@@ -41,9 +43,18 @@ pytest-cov==4.1.0
 pytest-mock==3.10.0
 unittest-mock==1.6.0
 
+# Payments & Subscriptions
+stripe==7.13.0
+werkzeug==2.3.7
+
+# Web Scraping
+beautifulsoup4==4.12.2
+requests==2.31.0
+selenium==4.17.2
+lxml==4.9.3
+
 # Utilities
 python-dotenv==1.0.0
-requests==2.31.0
 tqdm==4.66.1
 cryptography==41.0.4
 jsonschema==4.19.1
