@@ -1,0 +1,44 @@
+# Assistant Auto Ultime - Requirements
+
+# Backend Framework
+flask==2.3.3
+flask-cors==4.0.0
+gunicorn==21.2.0
+
+# Image Recognition
+opencv-python==4.8.1.78
+numpy==1.26.0
+pillow==10.0.1
+
+# OCR
+google-cloud-vision==3.5.0
+pytesseract==0.3.10
+
+# OBD-II
+obd==0.7.2
+pyserial==3.5
+
+# NLP
+openai==1.4.0
+nltk==3.8.1
+transformers==4.35.2
+
+# ECU Flash
+pyusb==1.2.1
+pydantic==2.5.2
+
+# Database
+sqlalchemy==2.0.23
+sqlite3-api==0.1.0
+
+# Testing
+pytest==7.4.2
+pytest-cov==4.1.0
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.31.0
+tqdm==4.66.1
+
+# Documentation
+sphinx==7.2.6
