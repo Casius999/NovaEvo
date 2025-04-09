@@ -363,15 +363,14 @@ Le service propose désormais un modèle commercial basé sur l'abonnement :
   - Flash ECU illimité
   - Support technique prioritaire
 
-### Affiliation de cartographies
-Le service propose un système d'affiliation avec des préparateurs automobiles :
+### Système d'affiliation global
+L'application intègre un système d'affiliation complet pour tous les produits et services proposés :
 
-- Recherche de cartographies adaptées au véhicule de l'utilisateur
-- Catégories disponibles : Origine/Éco, Sport, Compétition
-- Sources multiples : API partenaires, Facebook Marketplace, Leboncoin, groupes Facebook
-- **Système de tracking robuste** garantissant le suivi de 100% des achats effectués via l'application
+- **Tracking robuste** garantissant le suivi de 100% des achats effectués via l'application
 - Infrastructure de redirections sécurisées, cookies persistants, et fingerprinting d'appareil
 - Attribution totale des commissions sur chaque transaction sans aucune perte
+- S'applique à l'ensemble des produits : cartographies moteur, pièces détachées, accessoires, etc.
+- Sources multiples : API partenaires, marketplaces, boutiques en ligne spécialisées
 
 ## Documentation détaillée des modules
 
