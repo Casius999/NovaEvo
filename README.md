@@ -111,6 +111,14 @@ L'application sera disponible sur :
 - Backend API: http://localhost:5000
 - Frontend: http://localhost:3000
 
+## Guide de démarrage rapide
+
+Pour les nouveaux développeurs ou contributeurs, nous avons préparé un [guide de démarrage rapide](docs/GETTING_STARTED.md) détaillé qui vous guidera pas à pas dans la mise en place de votre environnement de développement et la prise en main du projet.
+
+## Architecture du système
+
+L'application est construite selon une architecture modulaire qui facilite la maintenance et l'évolution. Pour une compréhension approfondie des interactions entre les différents modules, veuillez consulter notre [documentation d'architecture](docs/ARCHITECTURE.md).
+
 ## Déploiement en production
 
 Pour déployer l'application en environnement de production, suivez ces étapes :
@@ -190,46 +198,7 @@ En production, ne stockez jamais les variables d'environnement directement dans 
          file: ./secrets/stripe_api_key.txt
      ```
 
-### 3. Système d'authentification et d'abonnement
-
-Pour gérer les utilisateurs et les abonnements en production :
-
-1. **Base de données utilisateurs**
-   - Utilisez PostgreSQL ou MongoDB pour stocker les données utilisateurs
-   - Implémentez le chiffrement des mots de passe avec bcrypt
-
-2. **Système d'authentification**
-   - Implémentez JWT (JSON Web Tokens) pour l'authentification
-   - Configurez le renouvellement automatique des tokens
-   - Ajoutez une vérification d'email pour confirmer les inscriptions
-
-3. **Gestion des abonnements**
-   - Intégrez Stripe pour gérer les paiements récurrents (19,90€/mois)
-   - Configurez des webhooks pour gérer les événements d'abonnement
-   - Implémentez un système de gestion des plans et des fonctionnalités par niveau
-
-### 4. Sauvegarde et surveillance
-
-1. **Sauvegarde automatique**
-   - Configurez des sauvegardes quotidiennes de la base de données
-   - Stockez les sauvegardes sur un service externe (AWS S3, GCP Storage)
-
-2. **Surveillance**
-   - Mettez en place un système de monitoring (Prometheus + Grafana)
-   - Configurez des alertes pour les incidents critiques
-   - Implementez des logs centralisés
-
-### 5. Scalabilité
-
-Pour gérer la croissance des utilisateurs :
-
-1. **Architecture microservices**
-   - Séparation des modules en services indépendants
-   - Utilisation de containers orchestrés (Kubernetes)
-
-2. **Load balancing**
-   - Configuration d'un répartiteur de charge (Nginx, HAProxy)
-   - Réplication des services pour la haute disponibilité
+Pour des instructions plus détaillées sur le déploiement, consultez notre [guide de déploiement](docs/DEPLOYMENT.md).
 
 ## Utilisation des modules
 
@@ -348,7 +317,7 @@ pip install pytest
 # Lancer tous les tests
 pytest
 
-# Lancer les tests du module ECU Flash
+# Lancer les tests d'un module spécifique
 pytest tests/test_ecu_flash.py
 ```
 
@@ -371,7 +340,11 @@ L'application expose les endpoints principaux suivants :
 - `POST /subscribe/webhook` - **NOUVEAU** : Gestion des webhooks Stripe
 - `POST /mapping_affiliations` - **NOUVEAU** : Recherche de cartographies via affiliation
 
-Consultez la documentation complète de l'API dans le dossier `/docs/api.md`.
+Consultez la documentation complète de l'API dans le fichier [api.md](docs/api.md).
+
+## Internationalisation
+
+L'Assistant Auto Ultime prend en charge plusieurs langues. Pour contribuer aux traductions ou ajouter une nouvelle langue, consultez notre [guide d'internationalisation](docs/INTERNATIONALIZATION.md).
 
 ## Fonctionnalités commerciales (NOUVEAU)
 
@@ -426,6 +399,11 @@ Utilisez ces fonctionnalités uniquement si vous comprenez les risques associés
 
 ## Contribution
 Veuillez consulter le fichier [CONTRIBUTING.md](CONTRIBUTING.md) pour les détails sur notre code de conduite et le processus de soumission des pull requests.
+
+Pour les nouveaux contributeurs, nous recommandons de commencer par la consultation du [guide de démarrage rapide](docs/GETTING_STARTED.md).
+
+## Feuille de route
+Pour connaître les prochaines étapes du développement, consultez notre [ROADMAP.md](ROADMAP.md) détaillée.
 
 ## Licence
 Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails.
