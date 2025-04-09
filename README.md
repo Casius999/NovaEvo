@@ -30,6 +30,7 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - Node.js 18+
 - Docker et Docker Compose
 - Accès à un dongle OBD-II compatible (optionnel pour le développement)
+- Interface de flashage ECU (ex: Tactrix Openport) pour le module de reprogrammation
 - Clés API pour Google Cloud Vision (OCR) et OpenAI (NLP)
 
 ### Installation avec environnement virtuel Python
@@ -153,14 +154,38 @@ result = nlp.interpret_command("Que signifie le code erreur P0300 ?")
 print(result)
 ```
 
+### ECU Flash - Reprogrammation de l'ECU
+Module permettant la lecture et la modification des paramètres de l'ECU pour l'optimisation des performances moteur.
+```python
+from ecu_flash.ecu_flash_main import flash_ecu, ECUFlashManager
+
+# Initialiser le gestionnaire ECU
+ecu_manager = ECUFlashManager()
+
+# Connexion à l'ECU
+connect_result = ecu_manager.connect_ecu()
+print(f"Connexion: {connect_result['message']}")
+
+# Flasher l'ECU avec des paramètres personnalisés
+params = {
+    "cartographie_injection": 105,  # 5% d'augmentation
+    "boost_turbo": 1.1  # 10% d'augmentation
+}
+result = flash_ecu(params)
+print(f"Résultat: {result['message']}")
+```
+
 ### Tests unitaires
 Pour exécuter les tests unitaires :
 ```bash
 # Installer pytest
 pip install pytest
 
-# Lancer les tests
+# Lancer tous les tests
 pytest
+
+# Lancer les tests du module ECU Flash
+pytest tests/test_ecu_flash.py
 ```
 
 ## API Rest
@@ -172,10 +197,35 @@ L'application expose les endpoints principaux suivants :
 - `GET /obd2` - Récupère les données OBD-II
 - `POST /nlp` - Interprète une requête en langage naturel
 - `POST /image_recognition` - Analyse une image pour diagnostic
-- `GET /ecu_flash` - Récupère les cartographies disponibles
+- `POST /ecu_flash` - Flash l'ECU avec des paramètres spécifiques
+- `POST /ecu_flash/connect` - Établit une connexion avec l'ECU
+- `GET /ecu_flash/read` - Lit la configuration actuelle de l'ECU
+- `GET /ecu_flash/parameters` - Récupère les limites de paramètres disponibles
 - `GET /parts_finder` - Recherche de pièces détachées
 
-Consultez la documentation complète de l'API dans le dossier `/docs`.
+Consultez la documentation complète de l'API dans le dossier `/docs/api.md`.
+
+## Documentation détaillée des modules
+
+Des guides d'utilisation complets sont disponibles pour chaque module :
+
+- [Module OCR](docs/README_OCR.md)
+- [Module OBD-II](docs/README_OBD.md)
+- [Module NLP](docs/README_NLP.md)
+- [Module Image Recognition](docs/README_Image_Recognition.md)
+- [Module ECU Flash](docs/README_ECU_FLASH.md)
+
+## Précautions d'utilisation
+
+⚠️ **ATTENTION** ⚠️
+
+La modification des paramètres de l'ECU via le module ECU Flash peut :
+- Affecter les performances et la fiabilité du véhicule
+- Augmenter l'usure du moteur et des composants connexes
+- Annuler la garantie du constructeur
+- Rendre le véhicule non conforme aux réglementations environnementales
+
+Utilisez ces fonctionnalités uniquement si vous comprenez les risques associés.
 
 ## Contribution
 Veuillez consulter le fichier [CONTRIBUTING.md](CONTRIBUTING.md) pour les détails sur notre code de conduite et le processus de soumission des pull requests.
