@@ -163,6 +163,7 @@ Analyse une image pour identifier des composants ou problèmes automobiles.
 | Nom | Type | Description |
 |-----|------|-------------|
 | image | File | L'image à analyser |
+| type | String | (Optionnel) Type d'analyse à effectuer ('standard' ou 'advanced') |
 
 **Réponse**
 
@@ -192,32 +193,124 @@ Analyse une image pour identifier des composants ou problèmes automobiles.
 
 ### 6. Module ECU Flash
 
+#### 6.1. Flasher l'ECU
+
 ```
-GET /ecu_flash
+POST /ecu_flash
 ```
 
-Récupère les cartographies disponibles pour le véhicule connecté.
+Flash l'ECU avec les paramètres de tuning spécifiés.
+
+**Paramètres**
+
+Le corps de la requête doit contenir un objet JSON avec les paramètres de tuning:
+
+```json
+{
+  "cartographie_injection": 105,
+  "boost_turbo": 1.1,
+  "avance_allumage": 12
+}
+```
+
+**Réponse (succès)**
+
+```json
+{
+  "status": "success",
+  "message": "Flash de l'ECU réussi.",
+  "new_configuration": {
+    "cartographie_injection": 105,
+    "boost_turbo": 1.1,
+    "avance_allumage": 12
+  }
+}
+```
+
+**Réponse (échec)**
+
+```json
+{
+  "status": "error",
+  "message": "Valeur '1.3' pour 'boost_turbo' hors limite (min: 0.8, max: 1.2)."
+}
+```
+
+#### 6.2. Connexion à l'ECU
+
+```
+POST /ecu_flash/connect
+```
+
+Établit une connexion avec l'ECU du véhicule.
+
+**Paramètres**
+
+Aucun paramètre requis.
+
+**Réponse**
+
+```json
+{
+  "success": true,
+  "message": "Connecté à l'ECU",
+  "device_id": "OP-23456",
+  "protocol": "CAN",
+  "interface": "Tactrix Openport 2.0"
+}
+```
+
+#### 6.3. Lecture de l'ECU
+
+```
+GET /ecu_flash/read
+```
+
+Lit la configuration actuelle de l'ECU.
+
+**Paramètres**
+
+Aucun paramètre requis.
+
+**Réponse**
+
+```json
+{
+  "success": true,
+  "message": "Lecture de l'ECU réussie",
+  "vehicle": {
+    "make": "Volkswagen",
+    "model": "Golf GTI",
+    "year": "2023"
+  },
+  "parameters_count": 24,
+  "maps_count": 8
+}
+```
+
+#### 6.4. Obtenir les limites des paramètres
+
+```
+GET /ecu_flash/parameters
+```
+
+Récupère les limites sécurisées pour tous les paramètres de tuning disponibles.
+
+**Paramètres**
+
+Aucun paramètre requis.
 
 **Réponse**
 
 ```json
 {
   "status": "success",
-  "data": {
-    "maps": [
-      {
-        "name": "ignition_advance",
-        "description": "Avance à l'allumage",
-        "type": "2D",
-        "category": "ignition"
-      },
-      {
-        "name": "fuel_injection",
-        "description": "Injection de carburant",
-        "type": "3D",
-        "category": "fuel"
-      }
-    ]
+  "parameters": {
+    "cartographie_injection": {"default": 100, "min": 90, "max": 115},
+    "boost_turbo": {"default": 1.0, "min": 0.8, "max": 1.2},
+    "avance_allumage": {"default": 10, "min": 5, "max": 15},
+    "limiteur_regime": {"default": 6500, "min": 6000, "max": 7500},
+    "richesse_melange": {"default": 1.0, "min": 0.9, "max": 1.1}
   }
 }
 ```
@@ -311,6 +404,19 @@ print(response.json())
 data = {'query': 'Que signifie le code erreur P0300 ?'}
 response = requests.post('http://localhost:5000/nlp', json=data)
 print(response.json())
+
+# Exemple d'utilisation du module ECU Flash
+# 1. Connexion à l'ECU
+response = requests.post('http://localhost:5000/ecu_flash/connect')
+print(response.json())
+
+# 2. Flashage avec paramètres personnalisés
+tuning_params = {
+    "cartographie_injection": 105,
+    "boost_turbo": 1.1
+}
+response = requests.post('http://localhost:5000/ecu_flash', json=tuning_params)
+print(response.json())
 ```
 
 ### JavaScript
@@ -338,6 +444,31 @@ fetch('http://localhost:5000/nlp', {
     query: 'Que signifie le code erreur P0300 ?'
   })
 })
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+
+// Exemple d'utilisation du module ECU Flash
+// 1. Connexion à l'ECU
+fetch('http://localhost:5000/ecu_flash/connect', {
+  method: 'POST'
+})
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // 2. Flashage avec paramètres personnalisés
+      return fetch('http://localhost:5000/ecu_flash', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cartographie_injection: 105,
+          boost_turbo: 1.1
+        })
+      });
+    }
+  })
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
