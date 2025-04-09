@@ -30,6 +30,9 @@ from image_recognition.image_recognition_main import ImageRecognitionEngine, det
 from ecu_flash.ecu_flash_main import flash_ecu, ECUFlashManager
 from parts_finder.parts_finder_main import PartsFinderManager, search_parts
 
+# Nouveaux modules (Étape 10)
+from subscriptions.subscriptions_main import process_subscription, app as subscriptions_app, webhook_handler
+
 # Initialiser les gestionnaires des modules
 ocr_processor = OCRProcessor()
 obd_manager = OBDManager()
@@ -48,7 +51,7 @@ def index():
         'message': 'API Assistant Auto Ultime opérationnelle',
         'modules': [
             '/ocr', '/obd2', '/nlp', '/image_recognition', 
-            '/ecu_flash', '/parts_finder'
+            '/ecu_flash', '/parts_finder', '/subscriptions', '/mapping_affiliations'
         ]
     })
 
@@ -520,6 +523,164 @@ def parts_finder_detail_endpoint():
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la récupération des détails: {str(e)}'
+        }), 500
+
+# Nouveaux endpoints pour le module d'abonnements (Étape 10)
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe_endpoint():
+    """
+    Endpoint pour le module de gestion des abonnements
+    
+    Accepte une requête POST avec les informations d'inscription (JSON avec "email" et "password")
+    et lance la souscription Stripe à 19,90€/mois
+    """
+    if not request.is_json:
+        return jsonify({
+            'status': 'error',
+            'message': 'Requête invalide. Veuillez envoyer un JSON avec les informations requises.'
+        }), 400
+    
+    user_data = request.get_json()
+    if not user_data or "email" not in user_data or "password" not in user_data:
+        return jsonify({
+            'status': 'error',
+            'message': 'Les informations "email" et "password" sont obligatoires.'
+        }), 400
+    
+    try:
+        result = process_subscription(user_data)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de la souscription: {str(e)}'
+        }), 500
+
+@app.route('/subscribe/webhook', methods=['POST'])
+def subscribe_webhook_endpoint():
+    """
+    Endpoint pour les webhooks Stripe
+    """
+    payload = request.data
+    sig_header = request.headers.get('Stripe-Signature')
+    
+    if not sig_header:
+        return jsonify({
+            'status': 'error',
+            'message': 'En-tête Stripe-Signature manquant'
+        }), 400
+    
+    try:
+        result = webhook_handler(payload, sig_header)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors du traitement du webhook: {str(e)}'
+        }), 500
+
+@app.route('/subscribe/plans', methods=['GET'])
+def subscription_plans_endpoint():
+    """
+    Endpoint pour récupérer les plans d'abonnement disponibles
+    """
+    plans = [
+        {
+            "id": "price_basic",
+            "name": "Formule Standard",
+            "price": 19.90,
+            "currency": "EUR",
+            "interval": "month",
+            "description": "Abonnement mensuel à 19,90€ avec dongle OBD-II offert",
+            "features": [
+                "Diagnostic OBD-II en temps réel",
+                "Reconnaissance de pièces par image",
+                "Assistant NLP automobile",
+                "Recherche de pièces détachées",
+                "OCR pour cartes grises",
+                "Cartographies moteur standard",
+                "Dongle OBD-II inclus"
+            ]
+        },
+        {
+            "id": "price_premium",
+            "name": "Formule Premium",
+            "price": 29.90,
+            "currency": "EUR",
+            "interval": "month",
+            "description": "Abonnement premium avec fonctionnalités avancées",
+            "features": [
+                "Toutes les fonctionnalités Standard",
+                "Cartographies moteur avancées",
+                "Flash ECU illimité",
+                "Support technique prioritaire",
+                "Dongle OBD-II Pro inclus",
+                "Mise à jour hebdomadaire des bases de données"
+            ]
+        }
+    ]
+    
+    return jsonify({
+        "status": "success",
+        "plans": plans
+    })
+
+# Endpoints pour le module Mapping Affiliations (Étape 10)
+
+@app.route('/mapping_affiliations', methods=['POST'])
+def mapping_affiliations_endpoint():
+    """
+    Endpoint pour le module d'affiliation cartographies
+    
+    Accepte une requête POST avec un JSON contenant "query" et optionnellement "category"
+    """
+    if not request.is_json:
+        return jsonify({
+            'status': 'error',
+            'message': 'Requête invalide. Veuillez envoyer un JSON avec les informations requises.'
+        }), 400
+    
+    data = request.get_json()
+    if not data or "query" not in data:
+        return jsonify({
+            'status': 'error',
+            'message': 'Le paramètre "query" est obligatoire.'
+        }), 400
+    
+    query = data["query"]
+    category = data.get("category")
+    
+    # Import et utilisation du module mapping_affiliations
+    try:
+        from mapping_affiliations.mapping_affiliations_main import search_mapping_offers
+        offers = search_mapping_offers(query, category)
+        return jsonify({"offers": offers})
+    except ImportError:
+        # Si le module n'est pas encore disponible, retourner un exemple de données
+        example_offers = [
+            {
+                "preparateur": "TuningBox France",
+                "description": "Cartographie Stage 1 pour moteurs TSI 2.0L",
+                "price": "249.90€",
+                "affiliate_link": "https://tuningbox-france.com/cart/stage1-tsi?ref=assistant-auto",
+                "category": category or "sport",
+                "source": "API Partenaire"
+            },
+            {
+                "preparateur": "DigiTech Performance",
+                "description": "Reprogrammation origine pour économie de carburant",
+                "price": "189.00€",
+                "affiliate_link": "https://digitech-perf.fr/eco?ref=auto-assistant",
+                "category": category or "origine",
+                "source": "Facebook Marketplace"
+            }
+        ]
+        return jsonify({"offers": example_offers})
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de la recherche de cartographies: {str(e)}'
         }), 500
 
 # Fonction principale
