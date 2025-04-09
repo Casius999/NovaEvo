@@ -1,241 +1,178 @@
-# NovaEvo - Module de Contexte et Synchronisation
+# Module de Contexte NovaEvo
 
-Le module de contexte permet à NovaEvo d'enrichir les données et fonctionnalités de base en se connectant à des serveurs de données spécialisés. Cette documentation explique comment configurer, utiliser et étendre le système de contexte.
-
-## Table des matières
-
-1. [Introduction](#introduction)
-2. [Architecture](#architecture)
-3. [Configuration](#configuration)
-4. [Types de Contextes](#types-de-contextes)
-5. [Utilisation du Module](#utilisation-du-module)
-6. [Sécurité](#sécurité)
-7. [Développement et Extension](#développement-et-extension)
-8. [Métriques et Performance](#métriques-et-performance)
-9. [Dépannage](#dépannage)
-
-## Introduction
-
-Le système de contexte est conçu pour permettre à NovaEvo d'accéder à des informations externes actualisées sans nécessiter de mises à jour de l'application elle-même. Il s'agit d'une architecture client-serveur où l'application NovaEvo agit comme un client qui interroge des serveurs spécialisés pour obtenir des données contextuelles.
-
-Les avantages de cette approche sont:
-- Données toujours à jour sans mise à jour de l'application
-- Enrichissement continu de l'expérience utilisateur
-- Séparation des préoccupations entre l'application et les données
-- Possibilité d'ajouter de nouveaux types de contextes sans modifier l'application
+Le module de contexte est une composante essentielle de NovaEvo qui permet d'enrichir l'expérience utilisateur en intégrant des données contextuelles depuis des serveurs dédiés. Ces données sont utilisées pour fournir des informations précises et pertinentes sur les véhicules, les pièces, les codes d'erreur et autres éléments liés à l'automobile.
 
 ## Architecture
 
-Le système de contexte s'articule autour de trois composants principaux:
+Le système de modules contextuels repose sur une architecture client-serveur sécurisée :
 
-1. **Gestionnaire de Contexte**: Coordonne la communication avec les serveurs, gère le cache et expose les API pour accéder aux données.
-2. **Modules Contextuels**: Représentent les différentes sources de données (codes DTC, données véhicules, etc.)
-3. **Vérificateur de Sécurité**: Assure l'authenticité et l'intégrité des données reçues.
+```
++---------------------+      HTTPS      +----------------------+
+| NovaEvo Application | <-------------> | Serveurs Contextuels |
++---------------------+                 +----------------------+
+        |                                         |
+        | Cache local                             | API REST sécurisée
+        |                                         |
++---------------------+                 +----------------------+
+| Données persistantes| <---- Sync ---> | Bases de données     |
++---------------------+                 | spécialisées         |
+                                        +----------------------+
+```
 
-Le flux de données est le suivant:
-1. L'application demande des données au gestionnaire de contexte
-2. Le gestionnaire vérifie si les données sont disponibles en cache et à jour
-3. Si nécessaire, il contacte le serveur contextuel approprié
-4. Le vérificateur de sécurité valide l'authenticité des données
-5. Les données sont mises en cache et retournées à l'application
+## Modules Contextuels Disponibles
+
+NovaEvo intègre plusieurs modules contextuels spécialisés :
+
+| Module ID | Description | Données fournies |
+|-----------|-------------|------------------|
+| `dtc_database` | Base de données des codes d'erreur (DTC) | Descriptions détaillées, causes possibles, solutions recommandées pour les codes d'erreur |
+| `vehicles_data` | Spécifications techniques des véhicules | Modèles, moteurs, spécifications, compatibilité des pièces |
+| `parts_database` | Catalogue de pièces détachées | Références, compatibilité, prix de référence, alternatives |
+| `repair_shops` | Réseau d'ateliers et professionnels | Coordonnées, spécialités, horaires, évaluations |
+| `ecu_compatibility` | Matrice de compatibilité ECU | Compatibilité des reprogrammations ECU, limites sécurisées |
+
+## Fonctionnalités principales
+
+### Synchronisation sécurisée
+
+Le module utilise des mécanismes de synchronisation avancés pour garantir l'intégrité et la disponibilité des données :
+
+- Communication HTTPS avec vérification des certificats SSL
+- Authentification par API key
+- Vérification cryptographique de l'intégrité des données
+- Mécanisme de cache local avec validation de fraîcheur
+- Données de secours en cas d'indisponibilité du serveur
+- Mécanisme de reprise sur erreur
+
+### Synchronisation adaptative et priorisation
+
+Le système optimise la synchronisation en fonction de l'importance et de la fréquence de mise à jour des données :
+
+- Ajustement dynamique des priorités des modules
+- Synchronisation plus fréquente des modules à haute priorité
+- Détection des changements pour optimiser les ressources réseau
+- Métriques de performance pour analyser le comportement
+
+### Intégration avec les autres modules
+
+Les données contextuelles sont utilisées par les autres modules de NovaEvo :
+
+- **Module OBD-II** : Enrichissement des codes d'erreur avec descriptions détaillées et solutions
+- **Module ECU Flash** : Vérification de la compatibilité et des limites sécurisées pour la reprogrammation
+- **Module Parts Finder** : Enrichissement des résultats de recherche avec compatibilité et alternatives
+- **Module Scheduling** : Accès aux données des ateliers et professionnels pour la planification des rendez-vous
 
 ## Configuration
 
 ### Variables d'environnement
 
-Configurez les serveurs contextuels dans votre fichier `.env`:
+Les modules contextuels sont configurés via des variables d'environnement dans le fichier `.env` :
 
 ```
-# Liste des serveurs de contexte séparés par des virgules
+# Serveurs contextuels
 CONTEXT_SERVERS=https://api.example.com/dtc_database,https://api.example.com/vehicles_data
+SYNC_INTERVAL=300  # En secondes (5 minutes par défaut)
 
-# Intervalle de synchronisation en secondes (défaut: 300s = 5 minutes)
-SYNC_INTERVAL=300
-
-# Clés API pour chaque serveur (remplacez MODULE_ID par l'identifiant du module)
+# Clés API pour l'authentification
 API_KEY_DTC_DATABASE=your_api_key_for_dtc_database
 API_KEY_VEHICLES_DATA=your_api_key_for_vehicles_data
+
+# Synchronisation adaptative
+ADAPTIVE_SYNC=True  # Active l'adaptation dynamique des priorités
 ```
 
-### Activation de la synchronisation automatique
+### Activation et désactivation des modules
 
-La synchronisation automatique est activée par défaut si des serveurs sont définis. Pour la désactiver:
+Vous pouvez activer ou désactiver des modules contextuels spécifiques en ajoutant ou supprimant leur URL dans la variable `CONTEXT_SERVERS`.
 
-```python
-# Dans votre code d'initialisation de l'application
-from utils.context_sync import context_manager
-context_manager.stop_background_sync()
-```
+## Utilisation dans le code
 
-## Types de Contextes
-
-NovaEvo prend en charge les types de contexte suivants:
-
-### DTC Database
-Base de données des codes d'erreur (Diagnostic Trouble Codes) avec:
-- Descriptions détaillées
-- Causes possibles
-- Étapes de résolution
-- Niveaux de sévérité
-
-### Vehicles Data
-Informations techniques sur les véhicules:
-- Spécifications des modèles
-- Compatibilité des pièces
-- Références constructeur
-- Informations de maintenance
-
-### Parts Database
-Catalogue de pièces détachées:
-- Références et équivalences
-- Prix recommandés
-- Disponibilité
-- Compatibilité inter-marques
-
-### Repair Shops
-Réseau de professionnels et ateliers:
-- Coordonnées et spécialités
-- Disponibilités et créneaux
-- Évaluations et certifications
-- Tarifs standards
-
-### ECU Compatibility
-Matrices de compatibilité pour le flashage ECU:
-- Limites sécurisées par modèle
-- Compatibilités matérielles
-- Versions de firmware
-- Précautions spécifiques
-
-## Utilisation du Module
-
-### Import et initialisation
+### Accès aux données contextuelles
 
 ```python
 from utils.context_sync import context_manager
 
-# Vérifier si un module est disponible
-if "dtc_database" in context_manager.modules:
-    # Utiliser le module
-    pass
+# Récupérer des données contextuelles
+dtc_data = context_manager.get_context_data("dtc_database", "codes.P0300")
+vehicle_data = context_manager.get_context_data("vehicles_data", "vehicles.model-123")
+
+# Vérifier la disponibilité d'un module
+if "repair_shops" in context_manager.modules:
+    shops_near_me = context_manager.get_context_data("repair_shops", "locations.paris")
 ```
 
-### Récupération des données contextuelles
-
-```python
-# Format simple
-dtc_info = context_manager.get_context_data("dtc_database", "codes.P0300")
-
-# Utilisation dans une fonction
-def get_dtc_description(code):
-    return context_manager.get_context_data("dtc_database", f"codes.{code}.description")
-
-# Récupération de toutes les données d'un module
-all_vehicle_data = context_manager.get_context_data("vehicles_data")
-```
-
-### Synchronisation manuelle
+### Forcer la synchronisation manuelle
 
 ```python
 # Synchroniser un module spécifique
 context_manager.sync_module("dtc_database")
 
 # Synchroniser tous les modules
-results = context_manager.sync_all_modules()
-print(f"Résultats: {results}")
-
-# Forcer la synchronisation même si récemment synchronisé
-context_manager.sync_module("vehicles_data", force=True)
+sync_results = context_manager.sync_all_modules()
+print(f"Synchronisation réussie: {sum(1 for r in sync_results.values() if r)}/{len(sync_results)}")
 ```
 
-### Vérification de l'état
+### Ajouter des écouteurs pour les mises à jour
 
 ```python
-# Obtenir l'état d'un module
-status = context_manager.get_module_status("dtc_database")
-print(f"Status: {status['status']}, Dernière synchronisation: {status['last_sync']}")
+# Définir une fonction de callback
+def on_dtc_database_updated(module_id, data):
+    print(f"Module {module_id} mis à jour avec {len(data)} entrées")
+    # Mettre à jour l'interface utilisateur, etc.
 
-# Obtenir l'état de tous les modules
-all_status = context_manager.get_all_modules_status()
+# Enregistrer l'écouteur
+context_manager.register_listener(on_dtc_database_updated)
 ```
 
-## Sécurité
+### Obtenir les métriques de performance
 
-### Vérification des sources
-
-Le système vérifie l'authenticité des serveurs de contexte en utilisant:
-- Validation des certificats TLS
-- Vérification des empreintes cryptographiques
-- Authentification par clé API
-- Signatures des données
-
-### Blacklisting
-
-Les serveurs suspects sont automatiquement mis sur liste noire:
 ```python
-from utils.security_check import security_checker
+# Récupérer les métriques de synchronisation
+metrics = context_manager.get_sync_metrics()
+print(f"Taux de succès global: {metrics['overall']['success_rate']:.2%}")
 
-# Vérifier manuellement un serveur
-result = security_checker.verify_server("https://api.example.com/dtc_database")
-if result["overall_status"] != "passed":
-    print(f"Attention! Serveur suspect: {result['checks']}")
-
-# Mettre manuellement un serveur sur liste noire
-security_checker.blacklist_server("https://malicious-server.com", "Source non fiable")
+# Analyser les performances des modules
+for module_id, module_metrics in metrics['modules'].items():
+    print(f"Module {module_id}: {module_metrics['success_rate']:.2%}, priorité: {module_metrics['priority']}")
 ```
 
-## Développement et Extension
+## Sécurité et Intégrité des Données
 
-### Ajout d'un nouveau type de contexte
+Le module implémente plusieurs mécanismes pour garantir la sécurité et l'intégrité des données :
 
-1. Implémentez un serveur API conforme aux spécifications
-2. Ajoutez l'URL du serveur à la liste CONTEXT_SERVERS
-3. Ajoutez la clé API correspondante (si nécessaire)
-4. Redémarrez l'application ou appelez context_manager.sync_all_modules()
+1. **Vérification SSL** : Validation des certificats des serveurs contextuels
+2. **Validation d'intégrité** : Vérification des hashes cryptographiques pour détecter toute altération
+3. **Fallback sécurisé** : Utilisation de données de secours en cas de compromission
+4. **Isolation des erreurs** : Confinement des erreurs pour éviter la propagation
 
-### Création d'un serveur de contexte compatible
+## Monitoring et Diagnostic
 
-Un serveur de contexte doit exposer les endpoints suivants:
-- `GET /api/data`: Retourne toutes les données contextuelles au format JSON
-- `GET /api/fingerprint`: Retourne l'empreinte cryptographique du serveur
-- `GET /api/security-check`: Retourne les informations de sécurité du serveur
-- `GET /api/health`: Endpoint de vérification de l'état du serveur
+Le module fournit des outils de surveillance pour diagnostiquer les problèmes :
 
-## Métriques et Performance
+```python
+# Vérifier le statut de tous les modules
+statuses = context_manager.get_all_modules_status()
+for module_id, status in statuses.items():
+    print(f"Module {module_id}: {status['status']}, dernière sync: {status['last_sync']}")
 
-### Monitoring
+# Examiner les métriques d'un module spécifique
+module_metrics = context_manager.metrics['module_metrics'].get('dtc_database', {})
+avg_exec_time = module_metrics.get('avg_execution_time', 0)
+print(f"Temps moyen d'exécution: {avg_exec_time:.2f}s")
+```
 
-Le système enregistre automatiquement des métriques de performance:
-- Temps de réponse des serveurs
-- Taux de succès des synchronisations
-- Volume de données transférées
-- Utilisation du cache
+## Bonnes pratiques
 
-### Optimisation
+1. **Ne bloquez pas l'interface utilisateur** : Utilisez toujours les données en cache quand elles sont disponibles, même si elles ne sont pas à jour
+2. **Gérez les données manquantes** : Prévoyez toujours le cas où les données contextuelles ne sont pas disponibles
+3. **Priorité à l'expérience utilisateur** : La synchronisation adaptative ajuste automatiquement les priorités, mais vous pouvez les définir manuellement pour des cas spécifiques
+4. **Respectez les limites** : Évitez de forcer trop de synchronisations manuelles pour ne pas surcharger les serveurs
 
-Pour optimiser les performances:
-- Augmentez l'intervalle de synchronisation pour les données rarement modifiées
-- Utilisez des chemins spécifiques pour récupérer uniquement les données nécessaires
-- Activez la compression des réponses au niveau du serveur
+## À venir
 
-## Dépannage
+De nouveaux modules contextuels sont en cours de développement :
 
-### Problèmes courants
-
-1. **Données non disponibles**
-   - Vérifiez que le module est enregistré et synchronisé
-   - Vérifiez le chemin d'accès aux données
-   - Consultez les logs pour les erreurs de synchronisation
-
-2. **Erreurs de synchronisation**
-   - Vérifiez la connectivité réseau
-   - Vérifiez que les clés API sont correctes
-   - Consultez les logs pour les messages d'erreur détaillés
-
-3. **Performance lente**
-   - Réduisez le nombre de serveurs contextuels
-   - Augmentez l'intervalle de synchronisation
-   - Utilisez des chemins spécifiques plutôt que de récupérer toutes les données
-
-### Logs
-
-Les logs du système de contexte sont disponibles dans le fichier de log principal avec le préfixe "novaevo.context_sync".
+- Base de données des huiles et lubrifiants avec compatibilité par modèle
+- Bibliothèque de schémas électriques et manuels techniques
+- Données de prix du marché en temps réel pour l'évaluation des véhicules
+- Base de données étendue des symptômes et diagnostics
