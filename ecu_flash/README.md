@@ -1,36 +1,47 @@
-# Module de Reprogrammation ECU
+# Module ECU Flash / Tuning
 
-Ce module est dédié à la lecture, l'analyse et la reprogrammation des calculateurs automobiles (ECU).
+Ce module permet la lecture, la modification et le flashage (reprogrammation) de l'ECU (Electronic Control Unit) d'un véhicule.
 
-## Fonctionnalités
-- Lecture des données ECU
-- Sauvegarde de firmware original (backup)
-- Modification de cartographies moteur
-- Optimisation de performance
-- Diagnostic avancé des calculateurs
-- Suppression de limitations constructeur
+## Caractéristiques principales
 
-## Technologies
-- Protocoles de communication spécifiques aux ECU
-- Techniques de décodage et encodage de firmware
-- Cryptographie automobile
-- Algorithmes d'optimisation de cartographie
+- Connexion directe à l'interface de flashage ECU (Tactrix Openport ou équivalent)
+- Lecture des paramètres actuels de l'ECU
+- Modification sécurisée des paramètres (cartographie injection, avance allumage, etc.)
+- Validation des paramètres selon des limites prédéfinies
+- Sauvegarde automatique de la configuration originale
+- Système de rollback en cas d'erreur
 
-## Structure du module
-- `/protocols` - Implémentation des protocoles de communication ECU
-- `/maps` - Bibliothèque de cartographies et modifications
-- `/security` - Gestion de la sécurité et bypass des protections
-- `/backup` - Système de sauvegarde et restauration
-- `/tuning` - Outils et algorithmes d'optimisation de performance
-- `/flasher` - Interface de programmation des ECU
-- `/api` - Interface pour l'intégration avec les autres modules
+## Documentation détaillée
 
-## Avertissements de sécurité
-- ⚠️ Ce module peut affecter les performances et la fiabilité du véhicule
-- ⚠️ Certaines modifications peuvent annuler la garantie constructeur
-- ⚠️ L'utilisation sur voie publique peut être soumise à des restrictions légales
-- ⚠️ Sauvegardez toujours le firmware original avant toute modification
+Pour une documentation complète sur l'utilisation du module, consultez [README_ECU_FLASH.md](../docs/README_ECU_FLASH.md) dans le dossier `/docs`.
 
-## Compatibilité
-- Liste des marques et ECU compatibles dans la documentation détaillée
-- Support variable selon le niveau de protection des calculateurs
+## Exemple d'utilisation rapide
+
+```python
+from ecu_flash.ecu_flash_main import flash_ecu
+
+# Paramètres de performance
+tuning_params = {
+    "cartographie_injection": 105,  # 5% d'augmentation
+    "boost_turbo": 1.1              # 10% d'augmentation
+}
+
+# Flasher l'ECU
+result = flash_ecu(tuning_params)
+print(result)
+```
+
+## Utilisez avec précaution
+
+⚠️ **AVERTISSEMENT** ⚠️
+
+La modification des paramètres de l'ECU peut affecter les performances du véhicule, provoquer des dommages au moteur si les ajustements sont trop extrêmes, et annuler la garantie du fabricant. Utilisez ce module uniquement si vous comprenez pleinement les risques associés.
+
+## Dépendances
+
+- Python 3.10+
+- Bibliothèque professionnelle `ecu_flash_lib`
+- Interface matérielle de flashage compatible
+- Pilotes USB pour l'interface de flashage
+
+Consultez le fichier [requirements.txt](../requirements.txt) pour les dépendances Python spécifiques.
