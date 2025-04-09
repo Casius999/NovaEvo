@@ -3,6 +3,8 @@ Assistant Auto Ultime - Application Principale
 """
 import os
 import json
+import logging
+from datetime import datetime
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -21,6 +23,40 @@ app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', 'uploads')
 
 # Créer le dossier d'upload si nécessaire
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Configuration du logging
+log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
+log_file = os.getenv('LOG_FILE', 'logs/auto_assistant.log')
+
+# Créer le dossier de logs si nécessaire
+os.makedirs(os.path.dirname(log_file), exist_ok=True)
+
+# Configuration du logger
+logger = logging.getLogger('assistant_auto')
+logger.setLevel(getattr(logging, log_level))
+
+# Handler pour le fichier
+file_handler = logging.FileHandler(log_file)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+logger.addHandler(file_handler)
+
+# Handler pour la console
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+logger.addHandler(console_handler)
+
+# Intégration de Sentry pour le monitoring des erreurs
+if os.getenv('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.flask import FlaskIntegration
+    
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_DSN'),
+        integrations=[FlaskIntegration()],
+        traces_sample_rate=float(os.getenv('SENTRY_TRACES_SAMPLE_RATE', '0.1')),
+        environment=os.getenv('ENVIRONMENT', 'development')
+    )
+    logger.info("Sentry initialized for error tracking")
 
 # Importer les modules
 from ocr.ocr_main import OCRProcessor
@@ -51,7 +87,8 @@ def index():
         'message': 'API Assistant Auto Ultime opérationnelle',
         'modules': [
             '/ocr', '/obd2', '/nlp', '/image_recognition', 
-            '/ecu_flash', '/parts_finder', '/subscriptions', '/mapping_affiliations'
+            '/ecu_flash', '/parts_finder', '/subscriptions', '/mapping_affiliations',
+            '/feedback'  # Nouvel endpoint pour l'étape 11
         ]
     })
 
@@ -98,6 +135,7 @@ def ocr_endpoint():
             }), 500
     
     except Exception as e:
+        logger.error(f"Erreur lors du traitement OCR: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors du traitement de l\'image: {str(e)}'
@@ -118,6 +156,7 @@ def obd2_endpoint():
         data = get_vehicle_data()
         return jsonify(data)
     except Exception as e:
+        logger.error(f"Erreur OBD-II: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la récupération des données OBD-II: {str(e)}'
@@ -208,6 +247,7 @@ def nlp_endpoint():
         })
         
     except Exception as e:
+        logger.error(f"Erreur NLP: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors du traitement de la commande: {str(e)}'
@@ -266,6 +306,7 @@ def process_command(command: str) -> str:
         return response.choices[0].message.content.strip()
         
     except Exception as e:
+        logger.error(f"Erreur OpenAI: {str(e)}")
         # En cas d'erreur avec OpenAI, utiliser les informations extraites
         fallback_response = f"Catégorie détectée: {result.get('category', 'inconnue')}"
         if "suggested_action" in result:
@@ -314,6 +355,7 @@ def image_recognition_endpoint():
         return jsonify(results)
         
     except Exception as e:
+        logger.error(f"Erreur reconnaissance d'image: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de l\'analyse de l\'image: {str(e)}'
@@ -352,6 +394,7 @@ def ecu_flash_endpoint():
         result = flash_ecu(tuning_parameters)
         return jsonify(result)
     except Exception as e:
+        logger.error(f"Erreur ECU flash: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors du flash ECU: {str(e)}'
@@ -369,6 +412,7 @@ def ecu_flash_connect_endpoint():
         else:
             return jsonify(result), 500
     except Exception as e:
+        logger.error(f"Erreur connexion ECU: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la connexion à l\'ECU: {str(e)}'
@@ -385,6 +429,7 @@ def ecu_flash_read_endpoint():
             return jsonify(result), 500
         return jsonify(result)
     except Exception as e:
+        logger.error(f"Erreur lecture ECU: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la lecture de l\'ECU: {str(e)}'
@@ -459,6 +504,7 @@ def parts_finder_endpoint():
         })
         
     except Exception as e:
+        logger.error(f"Erreur recherche pièces: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la recherche de pièces: {str(e)}'
@@ -491,6 +537,7 @@ def parts_finder_local_endpoint():
         return jsonify(results)
         
     except Exception as e:
+        logger.error(f"Erreur recherche locale: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la recherche locale: {str(e)}'
@@ -520,6 +567,7 @@ def parts_finder_detail_endpoint():
         return jsonify(result)
         
     except Exception as e:
+        logger.error(f"Erreur détails pièce: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la récupération des détails: {str(e)}'
@@ -552,6 +600,7 @@ def subscribe_endpoint():
         result = process_subscription(user_data)
         return jsonify(result)
     except Exception as e:
+        logger.error(f"Erreur souscription: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la souscription: {str(e)}'
@@ -575,6 +624,7 @@ def subscribe_webhook_endpoint():
         result = webhook_handler(payload, sig_header)
         return jsonify(result)
     except Exception as e:
+        logger.error(f"Erreur webhook: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors du traitement du webhook: {str(e)}'
@@ -678,10 +728,139 @@ def mapping_affiliations_endpoint():
         ]
         return jsonify({"offers": example_offers})
     except Exception as e:
+        logger.error(f"Erreur recherche cartographies: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Erreur lors de la recherche de cartographies: {str(e)}'
         }), 500
+
+# Nouvel endpoint pour la collecte de feedback (Étape 11)
+
+@app.route('/feedback', methods=['POST'])
+def feedback_endpoint():
+    """
+    Endpoint pour la collecte de feedback utilisateur
+    
+    Accepte les retours utilisateurs (commentaires, signalements de bugs, suggestions)
+    et les stocke pour analyse ultérieure
+    """
+    if not request.is_json:
+        return jsonify({
+            'status': 'error',
+            'message': 'Requête invalide. Veuillez envoyer un JSON avec les informations de feedback.'
+        }), 400
+    
+    # Récupérer les données du feedback
+    feedback_data = request.get_json()
+    
+    # Validation minimale des données
+    if not feedback_data or 'message' not in feedback_data:
+        return jsonify({
+            'status': 'error',
+            'message': 'Données de feedback incomplètes. Le champ "message" est requis.'
+        }), 400
+    
+    # Ajouter un timestamp s'il n'est pas déjà présent
+    if 'timestamp' not in feedback_data:
+        feedback_data['timestamp'] = datetime.now().isoformat()
+    
+    # Structure pour stocker le feedback
+    feedback_entry = {
+        'type': feedback_data.get('type', 'comment'),
+        'message': feedback_data['message'],
+        'email': feedback_data.get('email', 'anonymous'),
+        'timestamp': feedback_data['timestamp'],
+        'source': feedback_data.get('source', 'unknown'),
+        'user_agent': feedback_data.get('userAgent', 'not_provided'),
+        'ip_address': request.remote_addr
+    }
+    
+    try:
+        # Créer le dossier de feedback s'il n'existe pas
+        feedback_dir = os.path.join('data', 'feedback')
+        os.makedirs(feedback_dir, exist_ok=True)
+        
+        # Générer un nom de fichier unique
+        timestamp_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+        file_name = f"feedback_{timestamp_str}_{feedback_entry['type']}.json"
+        file_path = os.path.join(feedback_dir, file_name)
+        
+        # Enregistrer le feedback dans un fichier JSON
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(feedback_entry, f, ensure_ascii=False, indent=2)
+        
+        # Log le feedback pour suivi (version anonymisée)
+        logger.info(f"Nouveau feedback reçu: Type={feedback_entry['type']}, Source={feedback_entry['source']}")
+        
+        # Notification par email (exemple, à implémenter avec un service d'envoi d'emails)
+        if feedback_entry['type'] in ['bug', 'feature'] and os.getenv('ENABLE_EMAIL_NOTIFICATIONS') == 'True':
+            try:
+                send_feedback_notification(feedback_entry)
+            except Exception as e:
+                logger.warning(f"Impossible d'envoyer la notification par email: {str(e)}")
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Feedback enregistré avec succès',
+            'reference_id': os.path.splitext(file_name)[0]
+        }), 201
+        
+    except Exception as e:
+        logger.error(f"Erreur lors de l'enregistrement du feedback: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de l\'enregistrement du feedback: {str(e)}'
+        }), 500
+
+def send_feedback_notification(feedback_data):
+    """
+    Exemple de fonction pour envoyer une notification par email
+    
+    Args:
+        feedback_data (dict): Données du feedback à notifier
+    """
+    # Cette fonction est un placeholder et doit être implémentée avec un service d'envoi d'emails
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    
+    sender = os.getenv('NOTIFICATION_EMAIL_SENDER')
+    recipients = os.getenv('NOTIFICATION_EMAIL_RECIPIENTS', '').split(',')
+    password = os.getenv('NOTIFICATION_EMAIL_PASSWORD')
+    
+    if not sender or not recipients or not password:
+        logger.warning("Configuration email incomplète, notification non envoyée")
+        return
+    
+    # Créer le corps du message
+    message = MIMEMultipart()
+    message['From'] = sender
+    message['To'] = ', '.join(recipients)
+    message['Subject'] = f"[Assistant Auto] Nouveau feedback: {feedback_data['type']}"
+    
+    body = f"""
+    Nouveau feedback reçu:
+    
+    Type: {feedback_data['type']}
+    Horodatage: {feedback_data['timestamp']}
+    Email: {feedback_data['email']}
+    Source: {feedback_data['source']}
+    
+    Message:
+    {feedback_data['message']}
+    
+    ---
+    Ce message est généré automatiquement. Ne pas répondre directement.
+    """
+    
+    message.attach(MIMEText(body, 'plain'))
+    
+    # Envoyer l'email
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        server.login(sender, password)
+        server.sendmail(sender, recipients, message.as_string())
+    
+    logger.info(f"Notification de feedback envoyée à {len(recipients)} destinataires")
 
 # Fonction principale
 if __name__ == '__main__':
