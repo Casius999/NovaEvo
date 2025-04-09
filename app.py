@@ -27,7 +27,7 @@ from ocr.ocr_main import OCRProcessor
 from obd2.obd_main import OBDManager
 from nlp.nlp_main import AutoAssistantNLP
 from image_recognition.image_recognition_main import ImageRecognitionEngine, detect_labels
-# from ecu_flash import ecu_flash_main
+from ecu_flash.ecu_flash_main import flash_ecu, ECUFlashManager
 # from parts_finder import parts_finder_main
 
 # Initialiser les gestionnaires des modules
@@ -35,6 +35,7 @@ ocr_processor = OCRProcessor()
 obd_manager = OBDManager()
 nlp_assistant = AutoAssistantNLP()
 image_recognition_engine = ImageRecognitionEngine()
+ecu_flash_manager = ECUFlashManager()
 
 # Routes principales
 
@@ -321,13 +322,80 @@ def image_recognition_endpoint():
         except:
             pass  # Ignorer les erreurs de nettoyage
 
-@app.route('/ecu_flash', methods=['GET', 'POST'])
+@app.route('/ecu_flash', methods=['POST'])
 def ecu_flash_endpoint():
-    """Endpoint pour le module ECU Flash"""
+    """
+    Endpoint pour le module ECU Flash
+    
+    Accepte un JSON contenant les paramètres de tuning et les envoie au module de flashage ECU
+    """
+    # Vérifier si les données sont présentes dans la requête
+    if not request.is_json:
+        return jsonify({
+            'status': 'error',
+            'message': 'Requête invalide. Veuillez envoyer un JSON avec les paramètres de tuning.'
+        }), 400
+    
+    tuning_parameters = request.get_json()
+    if not tuning_parameters:
+        return jsonify({
+            'status': 'error',
+            'message': 'Aucun paramètre de tuning fourni.'
+        }), 400
+    
+    # Utiliser la fonction flash_ecu pour appliquer les paramètres
+    try:
+        result = flash_ecu(tuning_parameters)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors du flash ECU: {str(e)}'
+        }), 500
+
+@app.route('/ecu_flash/connect', methods=['POST'])
+def ecu_flash_connect_endpoint():
+    """
+    Endpoint pour établir une connexion avec l'ECU
+    """
+    try:
+        result = ecu_flash_manager.connect_ecu()
+        if result.get('success', False):
+            return jsonify(result)
+        else:
+            return jsonify(result), 500
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de la connexion à l\'ECU: {str(e)}'
+        }), 500
+
+@app.route('/ecu_flash/read', methods=['GET'])
+def ecu_flash_read_endpoint():
+    """
+    Endpoint pour lire la configuration actuelle de l'ECU
+    """
+    try:
+        result = ecu_flash_manager.read_ecu()
+        if "error" in result:
+            return jsonify(result), 500
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de la lecture de l\'ECU: {str(e)}'
+        }), 500
+
+@app.route('/ecu_flash/parameters', methods=['GET'])
+def ecu_flash_parameters_endpoint():
+    """
+    Endpoint pour récupérer les limites sécurisées des paramètres de tuning
+    """
+    from ecu_flash.ecu_flash_main import SECURE_LIMITS
+    
     return jsonify({
         'status': 'success',
-        'message': 'Module ECU Flash initialisé',
-        'endpoint': '/ecu_flash'
+        'parameters': SECURE_LIMITS
     })
 
 @app.route('/parts_finder', methods=['GET'])
