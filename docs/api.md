@@ -44,7 +44,7 @@ Vérifie si l'API est opérationnelle.
   "message": "API Assistant Auto Ultime opérationnelle",
   "modules": [
     "/ocr", "/obd2", "/nlp", "/image_recognition", 
-    "/ecu_flash", "/parts_finder"
+    "/ecu_flash", "/parts_finder", "/subscriptions", "/affiliations"
   ]
 }
 ```
@@ -366,6 +366,222 @@ Recherche des pièces détachées pour un véhicule.
 }
 ```
 
+### 8. Module Subscriptions
+
+```
+POST /subscribe
+```
+
+Souscrit un utilisateur à un abonnement.
+
+**Paramètres**
+
+| Nom | Type | Description |
+|-----|------|-------------|
+| email | String | Email de l'utilisateur |
+| password | String | Mot de passe (pour les nouveaux utilisateurs) |
+| name | String | Nom de l'utilisateur (pour les nouveaux utilisateurs) |
+| plan_id | String | ID du plan d'abonnement |
+
+**Réponse**
+
+```json
+{
+  "status": "success",
+  "message": "Abonnement créé avec succès",
+  "data": {
+    "user_id": "user-123456",
+    "subscription_id": "sub-789012",
+    "plan": "standard",
+    "status": "active",
+    "next_billing_date": "2025-05-09T00:00:00Z",
+    "dongle_shipping_info": {
+      "tracking_number": "TRK-123456",
+      "estimated_delivery": "2025-04-15"
+    }
+  }
+}
+```
+
+### 9. Module Affiliation Global
+
+#### 9.1. Suivi d'un achat
+
+```
+POST /affiliations/track
+```
+
+Enregistre et suit un achat effectué via le système d'affiliation.
+
+**Paramètres**
+
+| Nom | Type | Description |
+|-----|------|-------------|
+| product_type | String | Type de produit (cartographie, pièce, accessoire, etc.) |
+| product_id | String | ID du produit |
+| price | Number | Prix de la transaction |
+| partner_id | String | ID du partenaire |
+| user_id | String | ID de l'utilisateur |
+| session_id | String | ID de session pour le tracking |
+
+**Réponse**
+
+```json
+{
+  "status": "success",
+  "message": "Achat suivi avec succès",
+  "data": {
+    "tracking_id": "trk-123456789",
+    "timestamp": "2025-04-09T14:32:45.123Z",
+    "commission": {
+      "rate": 0.15,
+      "amount": 44.99,
+      "status": "pending"
+    }
+  }
+}
+```
+
+#### 9.2. Génération de lien d'affiliation
+
+```
+POST /affiliations/links/generate
+```
+
+Génère un lien d'affiliation pour un produit ou service.
+
+**Paramètres**
+
+| Nom | Type | Description |
+|-----|------|-------------|
+| target_url | String | URL cible du produit |
+| user_id | String | ID de l'utilisateur |
+| product_id | String | (Optionnel) ID du produit |
+| campaign | String | (Optionnel) Nom de la campagne |
+
+**Réponse**
+
+```json
+{
+  "status": "success",
+  "data": {
+    "original_url": "https://partner-site.com/product/123",
+    "affiliate_url": "https://track.assistant-auto-ultime.com/aff/u/user-456?target=aHR0cHM6Ly9wYXJ0bmVyLXNpdGUuY29tL3Byb2R1Y3QvMTIz&pid=prod-789&campaign=summer_sale",
+    "expires_at": "2025-07-08T16:45:30Z",
+    "short_url": "https://aau.co/t/abc123"
+  }
+}
+```
+
+#### 9.3. Liste des partenaires disponibles
+
+```
+GET /affiliations/partners
+```
+
+Récupère la liste des partenaires d'affiliation disponibles.
+
+**Paramètres**
+
+| Nom | Type | Description |
+|-----|------|-------------|
+| category | String | (Optionnel) Filtrer par catégorie de partenaire |
+| query | String | (Optionnel) Recherche textuelle |
+
+**Réponse**
+
+```json
+{
+  "status": "success",
+  "data": {
+    "count": 3,
+    "partners": [
+      {
+        "id": "partner-123",
+        "name": "SuperTuning",
+        "category": "cartographie",
+        "commission_rate": "15%",
+        "products_count": 128,
+        "logo_url": "https://example.com/partners/supertuning.png"
+      },
+      {
+        "id": "partner-456",
+        "name": "PiècesPro",
+        "category": "pieces_detachees",
+        "commission_rate": "8%",
+        "products_count": 5642,
+        "logo_url": "https://example.com/partners/piecespro.png"
+      },
+      {
+        "id": "partner-789",
+        "name": "AccesMoto",
+        "category": "accessoires",
+        "commission_rate": "12%",
+        "products_count": 843,
+        "logo_url": "https://example.com/partners/accesmoto.png"
+      }
+    ]
+  }
+}
+```
+
+#### 9.4. Rapports d'affiliation
+
+```
+GET /affiliations/reports
+```
+
+Récupère les statistiques et rapports d'affiliation.
+
+**Paramètres**
+
+| Nom | Type | Description |
+|-----|------|-------------|
+| period | String | (Optionnel) Période du rapport (daily, weekly, monthly, custom) |
+| start_date | String | (Optionnel) Date de début pour une période personnalisée |
+| end_date | String | (Optionnel) Date de fin pour une période personnalisée |
+| group_by | String | (Optionnel) Grouper par partenaire, produit, utilisateur |
+
+**Réponse**
+
+```json
+{
+  "status": "success",
+  "data": {
+    "period": "monthly",
+    "start_date": "2025-03-01",
+    "end_date": "2025-03-31",
+    "summary": {
+      "total_transactions": 1245,
+      "total_revenue": 156897.50,
+      "total_commission": 12552.80,
+      "average_order_value": 125.98,
+      "conversion_rate": "4.2%"
+    },
+    "by_product_type": [
+      {
+        "product_type": "cartographie",
+        "transactions": 402,
+        "revenue": 78590.00,
+        "commission": 6365.79
+      },
+      {
+        "product_type": "pieces_detachees",
+        "transactions": 685,
+        "revenue": 62471.50,
+        "commission": 4997.72
+      },
+      {
+        "product_type": "accessoires",
+        "transactions": 158,
+        "revenue": 15836.00,
+        "commission": 1189.29
+      }
+    ]
+  }
+}
+```
+
 ## Gestion des erreurs
 
 En cas d'erreur, l'API renvoie un code HTTP approprié et un message décrivant le problème :
@@ -405,17 +621,16 @@ data = {'query': 'Que signifie le code erreur P0300 ?'}
 response = requests.post('http://localhost:5000/nlp', json=data)
 print(response.json())
 
-# Exemple d'utilisation du module ECU Flash
-# 1. Connexion à l'ECU
-response = requests.post('http://localhost:5000/ecu_flash/connect')
-print(response.json())
-
-# 2. Flashage avec paramètres personnalisés
-tuning_params = {
-    "cartographie_injection": 105,
-    "boost_turbo": 1.1
+# Exemple d'utilisation du module Affiliations
+purchase_data = {
+    "product_type": "cartographie",
+    "product_id": "cart-123",
+    "price": 299.90,
+    "partner_id": "partner-456",
+    "user_id": "user-789",
+    "session_id": "sess-abc123"
 }
-response = requests.post('http://localhost:5000/ecu_flash', json=tuning_params)
+response = requests.post('http://localhost:5000/affiliations/track', json=purchase_data)
 print(response.json())
 ```
 
@@ -448,27 +663,21 @@ fetch('http://localhost:5000/nlp', {
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
 
-// Exemple d'utilisation du module ECU Flash
-// 1. Connexion à l'ECU
-fetch('http://localhost:5000/ecu_flash/connect', {
-  method: 'POST'
-})
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // 2. Flashage avec paramètres personnalisés
-      return fetch('http://localhost:5000/ecu_flash', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          cartographie_injection: 105,
-          boost_turbo: 1.1
-        })
-      });
-    }
+// Exemple d'utilisation du module Affiliations
+fetch('http://localhost:5000/affiliations/track', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    product_type: "pieces_detachees",
+    product_id: "piece-456",
+    price: 89.99,
+    partner_id: "partner-123",
+    user_id: "user-789",
+    session_id: "sess-abc123"
   })
+})
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
