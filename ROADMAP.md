@@ -1,6 +1,6 @@
-# Feuille de Route - NovaEvo & Assistant Deux Roues
+# Feuille de Route - NovaEvo & NovaEvo Deux Roues
 
-Cette feuille de route présente les étapes planifiées pour le développement et l'amélioration continue de nos produits, à la fois pour NovaEvo (voitures) et pour la nouvelle offre Assistant Deux Roues & Quads. Elle sera mise à jour régulièrement pour refléter les nouvelles priorités et les progrès réalisés.
+Cette feuille de route présente les étapes planifiées pour le développement et l'amélioration continue de nos produits, à la fois pour NovaEvo (voitures) et pour la nouvelle offre NovaEvo Deux Roues & Quads. Elle sera mise à jour régulièrement pour refléter les nouvelles priorités et les progrès réalisés.
 
 ## 🚀 Vision à long terme
 
@@ -82,12 +82,12 @@ Ces améliorations seront réalisées en parallèle des étapes principales :
   - Optimisation des bases de données pour gestion du volume croissant
   - Automatisation accrue des opérations DevOps
 
-## 🏍️ Assistant Deux Roues & Quads
+## 🏍️ NovaEvo Deux Roues & Quads
 
 ### 📋 Prochaines Étapes Spécifiques
 
 #### Étape 1D : Fondations et Architecture (T4 2024)
-- 📆 Création du nouveau dépôt "assistant-deuxroues-quads"
+- 📆 Création du nouveau dépôt "novaevo-deuxroues-quads"
 - 📆 Adaptation de l'architecture de base depuis NovaEvo
 - 📆 Mise en place de l'environnement de développement dédié
 - 📆 Création des modules spécifiques `/bike_specs`, `/quad_specs` et `/terrain_analysis`
