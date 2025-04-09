@@ -49,7 +49,7 @@ source venv/bin/activate
 
 # Windows
 python -m venv venv
-venv\Scripts\activate
+venv\\Scripts\\activate
 ```
 
 3. **Installer les dépendances backend**
@@ -104,6 +104,122 @@ docker-compose up -d
 L'application sera disponible sur :
 - Backend API: http://localhost:5000
 - Frontend: http://localhost:3000
+
+## Déploiement en production
+
+Pour déployer l'application en environnement de production, suivez ces étapes :
+
+### 1. Configuration HTTPS
+
+La sécurité en production est essentielle, surtout pour les fonctionnalités comme l'accès à la caméra (OCR) et l'authentification des utilisateurs.
+
+1. **Acquérir un certificat SSL**
+   - Utilisez Let's Encrypt pour un certificat gratuit ou achetez-en un auprès d'une autorité de certification
+   - Placez les fichiers de certificat (cert.pem, key.pem) dans un répertoire sécurisé
+
+2. **Configuration du serveur web**
+   - **Avec Nginx** :
+     ```
+     server {
+         listen 443 ssl;
+         server_name votre-domaine.com;
+         
+         ssl_certificate /chemin/vers/cert.pem;
+         ssl_certificate_key /chemin/vers/key.pem;
+         
+         # Redirection du frontend
+         location / {
+             proxy_pass http://localhost:3000;
+             proxy_set_header Host $host;
+             proxy_set_header X-Real-IP $remote_addr;
+         }
+         
+         # Redirection de l'API
+         location /api/ {
+             proxy_pass http://localhost:5000/;
+             proxy_set_header Host $host;
+             proxy_set_header X-Real-IP $remote_addr;
+         }
+     }
+     
+     # Redirection HTTP vers HTTPS
+     server {
+         listen 80;
+         server_name votre-domaine.com;
+         return 301 https://$host$request_uri;
+     }
+     ```
+
+### 2. Variables d'environnement sécurisées
+
+En production, ne stockez jamais les variables d'environnement directement dans des fichiers :
+
+1. **Serveur dédié ou VPS**
+   - Utilisez des variables d'environnement système
+   - Configurez-les dans le fichier de service systemd
+
+2. **Conteneurs Docker**
+   - Utilisez Docker Secrets ou un service de gestion de secrets (HashiCorp Vault, AWS Secrets Manager)
+   - Exemple avec Docker Compose et secrets :
+     ```yaml
+     version: '3.8'
+     services:
+       app:
+         image: assistant-auto-ultime-backend
+         secrets:
+           - google_api_key
+           - openai_api_key
+         environment:
+           - GOOGLE_API_KEY_FILE=/run/secrets/google_api_key
+           - OPENAI_API_KEY_FILE=/run/secrets/openai_api_key
+     
+     secrets:
+       google_api_key:
+         file: ./secrets/google_api_key.txt
+       openai_api_key:
+         file: ./secrets/openai_api_key.txt
+     ```
+
+### 3. Système d'authentification et d'abonnement
+
+Pour gérer les utilisateurs et les abonnements en production :
+
+1. **Base de données utilisateurs**
+   - Utilisez PostgreSQL ou MongoDB pour stocker les données utilisateurs
+   - Implémentez le chiffrement des mots de passe avec bcrypt
+
+2. **Système d'authentification**
+   - Implémentez JWT (JSON Web Tokens) pour l'authentification
+   - Configurez le renouvellement automatique des tokens
+   - Ajoutez une vérification d'email pour confirmer les inscriptions
+
+3. **Gestion des abonnements**
+   - Intégrez une passerelle de paiement (Stripe, PayPal)
+   - Configurez des webhooks pour gérer les événements d'abonnement
+   - Implémentez un système de gestion des plans et des fonctionnalités par niveau
+
+### 4. Sauvegarde et surveillance
+
+1. **Sauvegarde automatique**
+   - Configurez des sauvegardes quotidiennes de la base de données
+   - Stockez les sauvegardes sur un service externe (AWS S3, GCP Storage)
+
+2. **Surveillance**
+   - Mettez en place un système de monitoring (Prometheus + Grafana)
+   - Configurez des alertes pour les incidents critiques
+   - Implementez des logs centralisés
+
+### 5. Scalabilité
+
+Pour gérer la croissance des utilisateurs :
+
+1. **Architecture microservices**
+   - Séparation des modules en services indépendants
+   - Utilisation de containers orchestrés (Kubernetes)
+
+2. **Load balancing**
+   - Configuration d'un répartiteur de charge (Nginx, HAProxy)
+   - Réplication des services pour la haute disponibilité
 
 ## Utilisation des modules
 
@@ -175,6 +291,17 @@ result = flash_ecu(params)
 print(f"Résultat: {result['message']}")
 ```
 
+### Parts Finder - Recherche de pièces détachées
+Module pour rechercher des pièces détachées via différentes sources (API officielles et scraping).
+```python
+from parts_finder.parts_finder_main import search_parts
+
+# Rechercher des pièces
+results = search_parts(reference="F-001", type_piece="sport")
+for result in results:
+    print(f"{result['name']} - {result['price']} {result['currency']} - {result['source']}")
+```
+
 ### Tests unitaires
 Pour exécuter les tests unitaires :
 ```bash
@@ -201,7 +328,7 @@ L'application expose les endpoints principaux suivants :
 - `POST /ecu_flash/connect` - Établit une connexion avec l'ECU
 - `GET /ecu_flash/read` - Lit la configuration actuelle de l'ECU
 - `GET /ecu_flash/parameters` - Récupère les limites de paramètres disponibles
-- `GET /parts_finder` - Recherche de pièces détachées
+- `POST /parts_finder` - Recherche de pièces détachées
 
 Consultez la documentation complète de l'API dans le dossier `/docs/api.md`.
 
@@ -214,6 +341,8 @@ Des guides d'utilisation complets sont disponibles pour chaque module :
 - [Module NLP](docs/README_NLP.md)
 - [Module Image Recognition](docs/README_Image_Recognition.md)
 - [Module ECU Flash](docs/README_ECU_FLASH.md)
+- [Module Parts Finder](docs/README_PARTS_FINDER.md)
+- [Frontend](docs/README_FRONTEND.md)
 
 ## Précautions d'utilisation
 
