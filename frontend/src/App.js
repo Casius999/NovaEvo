@@ -4,24 +4,11 @@ import { Container, Nav, Navbar, Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-// Composants fictifs pour les modules
-const OCR = () => (
-  <Container className="mt-4">
-    <h2>Module OCR</h2>
-    <Card>
-      <Card.Body>
-        <Card.Title>Scanner de Carte Grise</Card.Title>
-        <Card.Text>
-          Ce module permet de scanner et d'extraire les informations d'une carte grise.
-        </Card.Text>
-        <div className="mb-3">
-          <input type="file" className="form-control" accept="image/*" />
-        </div>
-        <button className="btn btn-primary">Scanner</button>
-      </Card.Body>
-    </Card>
-  </Container>
-);
+// Import du composant OCRCapture
+import OCRCapture from './components/OCRCapture';
+
+// Composants pour les modules
+const OCR = () => <OCRCapture />;
 
 const OBD2 = () => (
   <Container className="mt-4">
