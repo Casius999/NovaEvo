@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: assistant-auto-frontend
+  name: novaevo-frontend
   labels:
-    app: assistant-auto
+    app: novaevo
     component: frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: assistant-auto
+      app: novaevo
       component: frontend
   template:
     metadata:
       labels:
-        app: assistant-auto
+        app: novaevo
         component: frontend
       annotations:
         prometheus.io/scrape: "true"
@@ -22,8 +22,8 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       containers:
-      - name: assistant-auto-frontend
-        image: ${DOCKER_USERNAME}/assistant-auto-frontend:${IMAGE_TAG}
+      - name: novaevo-frontend
+        image: ${DOCKER_USERNAME}/novaevo-frontend:${IMAGE_TAG}
         ports:
         - containerPort: 3000
         resources:
@@ -47,31 +47,31 @@ spec:
           periodSeconds: 20
         env:
         - name: REACT_APP_API_URL
-          value: "https://api.assistant-auto-ultime.com"
+          value: "https://api.novaevo.com"
         - name: REACT_APP_ENVIRONMENT
           value: "production"
         - name: REACT_APP_SENTRY_DSN
           valueFrom:
             secretKeyRef:
-              name: assistant-auto-frontend-secrets
+              name: novaevo-frontend-secrets
               key: REACT_APP_SENTRY_DSN
         - name: REACT_APP_STRIPE_PUBLISHABLE_KEY
           valueFrom:
             secretKeyRef:
-              name: assistant-auto-frontend-secrets
+              name: novaevo-frontend-secrets
               key: REACT_APP_STRIPE_PUBLISHABLE_KEY
         - name: REACT_APP_GOOGLE_ANALYTICS_ID
           valueFrom:
             secretKeyRef:
-              name: assistant-auto-frontend-secrets
+              name: novaevo-frontend-secrets
               key: REACT_APP_GOOGLE_ANALYTICS_ID
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: assistant-auto-frontend
+  name: novaevo-frontend
   labels:
-    app: assistant-auto
+    app: novaevo
     component: frontend
 spec:
   ports:
@@ -80,13 +80,13 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: assistant-auto
+    app: novaevo
     component: frontend
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: assistant-auto-frontend-secrets
+  name: novaevo-frontend-secrets
 type: Opaque
 data:
   # Exemple - ces valeurs doivent être remplacées par des valeurs encodées en base64
