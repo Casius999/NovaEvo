@@ -1,12 +1,12 @@
-# Feuille de Route - Assistant Auto Ultime & Assistant Deux Roues
+# Feuille de Route - NovaEvo & Assistant Deux Roues
 
-Cette feuille de route présente les étapes planifiées pour le développement et l'amélioration continue de nos produits, à la fois pour l'Assistant Auto Ultime (voitures) et pour la nouvelle offre Assistant Deux Roues & Quads. Elle sera mise à jour régulièrement pour refléter les nouvelles priorités et les progrès réalisés.
+Cette feuille de route présente les étapes planifiées pour le développement et l'amélioration continue de nos produits, à la fois pour NovaEvo (voitures) et pour la nouvelle offre Assistant Deux Roues & Quads. Elle sera mise à jour régulièrement pour refléter les nouvelles priorités et les progrès réalisés.
 
 ## 🚀 Vision à long terme
 
 Notre ambition est de créer un écosystème complet de solutions pour tous les types de véhicules, combinant diagnostics avancés, optimisations personnalisées, et conseils d'entretien à travers des plateformes intuitives et accessibles. Notre objectif est de démocratiser les technologies avancées pour tous les utilisateurs de véhicules terrestres tout en créant un écosystème de services à forte valeur ajoutée.
 
-## 📱 Assistant Auto Ultime (Voitures)
+## 📱 NovaEvo (Voitures)
 
 ### ✅ Fonctionnalités déjà implémentées
 
@@ -88,7 +88,7 @@ Ces améliorations seront réalisées en parallèle des étapes principales :
 
 #### Étape 1D : Fondations et Architecture (T4 2024)
 - 📆 Création du nouveau dépôt "assistant-deuxroues-quads"
-- 📆 Adaptation de l'architecture de base depuis Assistant Auto Ultime
+- 📆 Adaptation de l'architecture de base depuis NovaEvo
 - 📆 Mise en place de l'environnement de développement dédié
 - 📆 Création des modules spécifiques `/bike_specs`, `/quad_specs` et `/terrain_analysis`
 
@@ -180,7 +180,7 @@ Ces améliorations seront réalisées en parallèle des étapes principales :
 
 ## 📊 Objectifs Commerciaux et KPIs
 
-### Objectifs Auto 2026
+### Objectifs NovaEvo 2026
 - 200 000 utilisateurs actifs mensuels
 - 50 000 abonnés premium
 - Taux de rétention de 85% sur les abonnements
@@ -206,6 +206,7 @@ Consultez également les documents complémentaires:
 - [Analyse détaillée du marché](docs/MARKET_ANALYSIS.md)
 - [Plan de développement technique](docs/TECHNICAL_ROADMAP.md)
 - [Stratégie de partenariats](docs/PARTNERS.md)
+- [Vision stratégique NovaEvo](docs/NOVAEVO_VISION.md)
 
 ---
 
