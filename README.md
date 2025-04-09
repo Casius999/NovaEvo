@@ -25,13 +25,14 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - `/docs` - Documentation complète du projet
 - `/tests` - Tests unitaires et d'intégration
 - `/subscriptions` - **NOUVEAU** : Système de gestion des abonnements avec Stripe
-- `/affiliations` - **NOUVEAU** : Module d'affiliation global pour tous les achats
+- `/mapping_affiliations` - **NOUVEAU** : Module d'affiliation global pour tous les achats
 
 ## Documentation Stratégique et Financière
-- [Plan Financier Optimisé](docs/FINANCIAL_PLAN.md) - Plan financier complet sur 3 ans
-- [Optimisation des Coûts](docs/COST_OPTIMIZATION_SUMMARY.md) - Synthèse des réductions de coûts (-37%)
+- [Plan Financier](docs/FINANCIAL_PLAN.md) - Plan financier prévisionnel sur 3 ans
+- [Stratégie d'Optimisation des Coûts](docs/COST_OPTIMIZATION_SUMMARY.md) - Approche d'optimisation financière
 - [Architecture Serverless](docs/ARCHITECTURE_SERVERLESS.md) - Solution technique optimisée
-- [Finances du Système d'Affiliation](docs/AFFILIATION_FINANCES.md) - Modèle économique d'affiliation
+- [Modèle d'Affiliation](docs/AFFILIATION_FINANCES.md) - Projections du système d'affiliation
+- [Stratégie d'Investissement](docs/INVESTMENT_STRATEGY.md) - Plan de financement et valorisation
 
 ## Installation
 
@@ -306,7 +307,7 @@ print(f"Abonnement créé: {result}")
 ### Affiliations - Système d'affiliation global (NOUVEAU)
 Module d'affiliation pour tous les achats réalisés via l'application.
 ```python
-from affiliations.affiliations_main import track_purchase
+from mapping_affiliations.affiliations_main import track_purchase
 
 # Exemple de suivi d'achat
 purchase_data = {
@@ -377,11 +378,11 @@ Le service propose désormais un modèle commercial basé sur l'abonnement :
   - Support technique prioritaire
 
 ### Système d'affiliation global
-L'application intègre un système d'affiliation complet pour tous les produits et services proposés :
+L'application intègre un système d'affiliation pour tous les produits et services proposés :
 
-- **Tracking robuste** garantissant le suivi de 100% des achats effectués via l'application
-- Infrastructure de redirections sécurisées, cookies persistants, et fingerprinting d'appareil
-- Attribution totale des commissions sur chaque transaction sans aucune perte
+- **Tracking robuste** pour le suivi des achats effectués via l'application
+- Infrastructure de redirections sécurisées, cookies et fingerprinting d'appareil
+- Attribution des commissions sur les transactions
 - S'applique à l'ensemble des produits : cartographies moteur, pièces détachées, accessoires, etc.
 - Sources multiples : API partenaires, marketplaces, boutiques en ligne spécialisées
 
@@ -396,7 +397,7 @@ Des guides d'utilisation complets sont disponibles pour chaque module :
 - [Module ECU Flash](docs/README_ECU_FLASH.md)
 - [Module Parts Finder](docs/README_PARTS_FINDER.md)
 - [Module Subscriptions](docs/README_SUBSCRIPTIONS.md) - **NOUVEAU**
-- [Module Affiliations](docs/README_AFFILIATIONS.md) - **NOUVEAU**
+- [Module Affiliations](docs/README_MAPPING_AFFILIATIONS.md) - **NOUVEAU**
 - [Frontend](docs/README_FRONTEND.md)
 
 ## Précautions d'utilisation
