@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { Container, Nav, Navbar, Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
+import { Container, Nav, Navbar, Card, Row, Col, Button, Dropdown, Alert, Badge } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
