@@ -1,6 +1,6 @@
 # Documentation
 
-Cette section contient toute la documentation du projet Assistant Auto Ultime.
+Cette section contient toute la documentation du projet NovaEvo.
 
 ## Structure de la documentation
 
