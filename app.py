@@ -17,14 +17,21 @@ CORS(app)  # Activer CORS pour toutes les routes
 # Configuration
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev_key')
 app.config['DEBUG'] = os.getenv('DEBUG', 'True').lower() in ('true', '1', 't')
+app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', 'uploads')
 
-# Importer les modules (à mesure qu'ils sont développés)
-# from ocr import ocr_main
+# Créer le dossier d'upload si nécessaire
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Importer les modules
+from ocr.ocr_main import OCRProcessor
 # from obd2 import obd_main
 # from nlp import nlp_main
 # from image_recognition import image_recognition_main
 # from ecu_flash import ecu_flash_main
 # from parts_finder import parts_finder_main
+
+# Initialiser les gestionnaires des modules
+ocr_processor = OCRProcessor()
 
 # Routes principales
 
@@ -44,13 +51,56 @@ def index():
 
 @app.route('/ocr', methods=['POST'])
 def ocr_endpoint():
-    """Endpoint pour le module OCR"""
-    # Pour le moment, simuler une réponse
-    return jsonify({
-        'status': 'success',
-        'message': 'Module OCR prêt à recevoir des images',
-        'endpoint': '/ocr'
-    })
+    """
+    Endpoint pour le module OCR
+    
+    Accepte une image de carte grise, la traite avec l'OCR, et retourne les informations extraites
+    """
+    # Vérifier si une image a été envoyée
+    if 'image' not in request.files:
+        return jsonify({
+            'status': 'error',
+            'message': 'Aucune image fournie. Veuillez envoyer une image dans le champ "image".'
+        }), 400
+    
+    image_file = request.files['image']
+    
+    if image_file.filename == '':
+        return jsonify({
+            'status': 'error',
+            'message': 'Aucun fichier sélectionné'
+        }), 400
+    
+    try:
+        # Sauvegarder temporairement l'image
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_file.filename)
+        image_file.save(image_path)
+        
+        # Traiter l'image avec OCR
+        ocr_result = ocr_processor.process_image(image_path=image_path)
+        
+        # Extraire les informations du véhicule
+        if 'error' not in ocr_result:
+            vehicle_info = ocr_processor.extract_vehicle_info(ocr_result)
+            return jsonify(vehicle_info)
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': ocr_result['error']
+            }), 500
+    
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors du traitement de l\'image: {str(e)}'
+        }), 500
+    finally:
+        # Nettoyer le fichier temporaire
+        try:
+            if os.path.exists(image_path):
+                os.remove(image_path)
+        except:
+            pass  # Ignorer les erreurs de nettoyage
 
 @app.route('/obd2', methods=['GET'])
 def obd2_endpoint():
