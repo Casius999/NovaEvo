@@ -26,7 +26,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 from ocr.ocr_main import OCRProcessor
 from obd2.obd_main import OBDManager
 from nlp.nlp_main import AutoAssistantNLP
-# from image_recognition import image_recognition_main
+from image_recognition.image_recognition_main import ImageRecognitionEngine, detect_labels
 # from ecu_flash import ecu_flash_main
 # from parts_finder import parts_finder_main
 
@@ -34,6 +34,7 @@ from nlp.nlp_main import AutoAssistantNLP
 ocr_processor = OCRProcessor()
 obd_manager = OBDManager()
 nlp_assistant = AutoAssistantNLP()
+image_recognition_engine = ImageRecognitionEngine()
 
 # Routes principales
 
@@ -269,12 +270,56 @@ def process_command(command: str) -> str:
 
 @app.route('/image_recognition', methods=['POST'])
 def image_recognition_endpoint():
-    """Endpoint pour le module de reconnaissance d'image"""
-    return jsonify({
-        'status': 'success',
-        'message': 'Module de reconnaissance d\'image prêt à analyser',
-        'endpoint': '/image_recognition'
-    })
+    """
+    Endpoint pour le module de reconnaissance d'image
+    
+    Accepte une image et retourne l'analyse des labels détectés via Google Cloud Vision
+    """
+    # Vérifier si une image a été envoyée
+    if 'image' not in request.files:
+        return jsonify({
+            'status': 'error',
+            'message': 'Aucune image fournie. Veuillez envoyer une image dans le champ "image".'
+        }), 400
+    
+    image_file = request.files['image']
+    
+    if image_file.filename == '':
+        return jsonify({
+            'status': 'error',
+            'message': 'Aucun fichier sélectionné'
+        }), 400
+    
+    try:
+        # Sauvegarder temporairement l'image
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_file.filename)
+        image_file.save(image_path)
+        
+        # Déterminer le type d'analyse à effectuer (standard ou avancée)
+        analysis_type = request.args.get('type', 'standard')
+        
+        if analysis_type == 'advanced':
+            # Utiliser la classe pour une analyse complète (OpenCV + Vision API)
+            results = image_recognition_engine.detect_labels(image_path)
+        else:
+            # Utiliser la fonction autonome pour la détection simple de labels
+            results = detect_labels(image_path)
+        
+        # Retourner les résultats
+        return jsonify(results)
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Erreur lors de l\'analyse de l\'image: {str(e)}'
+        }), 500
+    finally:
+        # Nettoyer le fichier temporaire
+        try:
+            if os.path.exists(image_path):
+                os.remove(image_path)
+        except:
+            pass  # Ignorer les erreurs de nettoyage
 
 @app.route('/ecu_flash', methods=['GET', 'POST'])
 def ecu_flash_endpoint():
