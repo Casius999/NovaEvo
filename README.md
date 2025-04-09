@@ -1,7 +1,7 @@
 # Assistant Auto Ultime
 
 ## Description
-Assistant Auto Ultime est une plateforme complète pour les passionnés et professionnels de l'automobile, intégrant des fonctionnalités avancées d'OCR, de diagnostic OBD-II, de traitement du langage naturel, de reconnaissance d'images, de reprogrammation ECU et de recherche de pièces détachées.
+Assistant Auto Ultime est une plateforme complète pour les passionnés et professionnels de l'automobile, intégrant des fonctionnalités avancées d'OCR, de diagnostic OBD-II, de traitement du langage naturel, de reconnaissance d'images, de reprogrammation ECU et de recherche de pièces détachées. La plateforme propose désormais un système d'abonnement et un service d'affiliation de cartographies moteur.
 
 ## Objectifs
 - Simplifier le diagnostic automobile via une interface intuitive
@@ -11,6 +11,8 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - Offrir un diagnostic visuel via reconnaissance d'images
 - Faciliter la reprogrammation ECU pour l'optimisation des performances
 - Proposer un catalogue complet de pièces détachées (origine, sport, compétition)
+- **NOUVEAU** : Offrir un service d'abonnement avec dongle OBD-II inclus
+- **NOUVEAU** : Proposer des cartographies moteur via un système d'affiliation avec les préparateurs
 
 ## Structure du dépôt
 - `/ocr` - Module de scan OCR pour la carte grise
@@ -22,6 +24,8 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - `/frontend` - Interface utilisateur (Web/Mobile)
 - `/docs` - Documentation complète du projet
 - `/tests` - Tests unitaires et d'intégration
+- `/subscriptions` - **NOUVEAU** : Système de gestion des abonnements avec Stripe
+- `/mapping_affiliations` - **NOUVEAU** : Module d'affiliation pour cartographies moteur
 
 ## Installation
 
@@ -32,6 +36,8 @@ Assistant Auto Ultime est une plateforme complète pour les passionnés et profe
 - Accès à un dongle OBD-II compatible (optionnel pour le développement)
 - Interface de flashage ECU (ex: Tactrix Openport) pour le module de reprogrammation
 - Clés API pour Google Cloud Vision (OCR) et OpenAI (NLP)
+- **NOUVEAU** : Compte Stripe pour le système d'abonnement
+- **NOUVEAU** : Clés API pour les services d'affiliation de cartographies
 
 ### Installation avec environnement virtuel Python
 
@@ -169,15 +175,19 @@ En production, ne stockez jamais les variables d'environnement directement dans 
          secrets:
            - google_api_key
            - openai_api_key
+           - stripe_api_key
          environment:
            - GOOGLE_API_KEY_FILE=/run/secrets/google_api_key
            - OPENAI_API_KEY_FILE=/run/secrets/openai_api_key
+           - STRIPE_API_KEY_FILE=/run/secrets/stripe_api_key
      
      secrets:
        google_api_key:
          file: ./secrets/google_api_key.txt
        openai_api_key:
          file: ./secrets/openai_api_key.txt
+       stripe_api_key:
+         file: ./secrets/stripe_api_key.txt
      ```
 
 ### 3. Système d'authentification et d'abonnement
@@ -194,7 +204,7 @@ Pour gérer les utilisateurs et les abonnements en production :
    - Ajoutez une vérification d'email pour confirmer les inscriptions
 
 3. **Gestion des abonnements**
-   - Intégrez une passerelle de paiement (Stripe, PayPal)
+   - Intégrez Stripe pour gérer les paiements récurrents (19,90€/mois)
    - Configurez des webhooks pour gérer les événements d'abonnement
    - Implémentez un système de gestion des plans et des fonctionnalités par niveau
 
@@ -302,6 +312,33 @@ for result in results:
     print(f"{result['name']} - {result['price']} {result['currency']} - {result['source']}")
 ```
 
+### Subscriptions - Gestion des abonnements (NOUVEAU)
+Module de gestion des abonnements utilisant Stripe pour les paiements récurrents.
+```python
+from subscriptions.subscriptions_main import process_subscription
+
+# Créer un abonnement pour un utilisateur
+user_data = {
+    "email": "utilisateur@example.com",
+    "password": "motdepasse123",
+    "name": "John Doe",
+    "plan_id": "price_basic"  # Plan à 19,90€/mois
+}
+result = process_subscription(user_data)
+print(f"Abonnement créé: {result}")
+```
+
+### Mapping Affiliations - Cartographies moteur (NOUVEAU)
+Module d'affiliation pour proposer des cartographies moteur personnalisées.
+```python
+from mapping_affiliations.mapping_affiliations_main import search_mapping_offers
+
+# Rechercher des cartographies pour un véhicule
+results = search_mapping_offers(query="cartographie golf 7 gti", category="sport")
+for result in results:
+    print(f"{result['preparateur']} - {result['description']} - {result['price']} - {result['source']}")
+```
+
 ### Tests unitaires
 Pour exécuter les tests unitaires :
 ```bash
@@ -329,8 +366,37 @@ L'application expose les endpoints principaux suivants :
 - `GET /ecu_flash/read` - Lit la configuration actuelle de l'ECU
 - `GET /ecu_flash/parameters` - Récupère les limites de paramètres disponibles
 - `POST /parts_finder` - Recherche de pièces détachées
+- `POST /subscribe` - **NOUVEAU** : Souscription à un abonnement Stripe
+- `GET /subscribe/plans` - **NOUVEAU** : Récupère les plans d'abonnement disponibles
+- `POST /subscribe/webhook` - **NOUVEAU** : Gestion des webhooks Stripe
+- `POST /mapping_affiliations` - **NOUVEAU** : Recherche de cartographies via affiliation
 
 Consultez la documentation complète de l'API dans le dossier `/docs/api.md`.
+
+## Fonctionnalités commerciales (NOUVEAU)
+
+### Abonnements
+Le service propose désormais un modèle commercial basé sur l'abonnement :
+
+- **Abonnement Standard** : 19,90€/mois
+  - Dongle OBD-II offert à l'inscription
+  - Accès à toutes les fonctionnalités de diagnostic
+  - Support technique par email
+
+- **Abonnement Premium** : 29,90€/mois
+  - Toutes les fonctionnalités de l'abonnement Standard
+  - Dongle OBD-II Pro offert à l'inscription
+  - Cartographies moteur avancées
+  - Flash ECU illimité
+  - Support technique prioritaire
+
+### Affiliation de cartographies
+Le service propose un système d'affiliation avec des préparateurs automobiles :
+
+- Recherche de cartographies adaptées au véhicule de l'utilisateur
+- Catégories disponibles : Origine/Éco, Sport, Compétition
+- Sources multiples : API partenaires, Facebook Marketplace, Leboncoin, groupes Facebook
+- Commission sur chaque vente réalisée via la plateforme
 
 ## Documentation détaillée des modules
 
@@ -342,6 +408,8 @@ Des guides d'utilisation complets sont disponibles pour chaque module :
 - [Module Image Recognition](docs/README_Image_Recognition.md)
 - [Module ECU Flash](docs/README_ECU_FLASH.md)
 - [Module Parts Finder](docs/README_PARTS_FINDER.md)
+- [Module Subscriptions](docs/README_SUBSCRIPTIONS.md) - **NOUVEAU**
+- [Module Mapping Affiliations](docs/README_MAPPING_AFFILIATIONS.md) - **NOUVEAU**
 - [Frontend](docs/README_FRONTEND.md)
 
 ## Précautions d'utilisation
