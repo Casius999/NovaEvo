@@ -155,19 +155,19 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/assistant-auto-backend:${{ github.sha }}
+        tags: ${{ secrets.DOCKER_USERNAME }}/novaevo-backend:${{ github.sha }}
         
     - name: Build and push frontend Docker image
       uses: docker/build-push-action@v4
       with:
         context: ./frontend
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/assistant-auto-frontend:${{ github.sha }}
+        tags: ${{ secrets.DOCKER_USERNAME }}/novaevo-frontend:${{ github.sha }}
         
     - name: Update deployment file
       run: |
-        sed -i 's|image: .*assistant-auto-backend.*|image: ${{ secrets.DOCKER_USERNAME }}/assistant-auto-backend:${{ github.sha }}|' kubernetes/backend-deployment.yaml
-        sed -i 's|image: .*assistant-auto-frontend.*|image: ${{ secrets.DOCKER_USERNAME }}/assistant-auto-frontend:${{ github.sha }}|' kubernetes/frontend-deployment.yaml
+        sed -i 's|image: .*novaevo-backend.*|image: ${{ secrets.DOCKER_USERNAME }}/novaevo-backend:${{ github.sha }}|' kubernetes/backend-deployment.yaml
+        sed -i 's|image: .*novaevo-frontend.*|image: ${{ secrets.DOCKER_USERNAME }}/novaevo-frontend:${{ github.sha }}|' kubernetes/frontend-deployment.yaml
         
     - name: Deploy to DigitalOcean Kubernetes
       run: |
@@ -175,5 +175,5 @@ jobs:
         kubectl apply -f kubernetes/backend-deployment.yaml
         kubectl apply -f kubernetes/frontend-deployment.yaml
         kubectl apply -f kubernetes/service.yaml
-        kubectl rollout restart deployment assistant-auto-backend
-        kubectl rollout restart deployment assistant-auto-frontend
+        kubectl rollout restart deployment novaevo-backend
+        kubectl rollout restart deployment novaevo-frontend
