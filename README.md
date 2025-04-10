@@ -58,6 +58,7 @@ Le nouveau système de planification automatique permet :
 - [Stratégie d'Investissement](docs/INVESTMENT_STRATEGY.md) - Plan de financement et valorisation
 - [Roadmap de Production](docs/ROADMAP_PRODUCTION.md) - **NOUVEAU** : Stratégie de déploiement et suivi de performance
 - [Stratégie de Monétisation](docs/MONETISATION_STRATEGIE.md) - **NOUVEAU** : Approche commerciale détaillée
+- [Stratégie de Communication Open Beta](docs/STRATEGIE_COMMUNICATION_OPENBETA.md) - **NOUVEAU** : Plan de lancement de l'open beta et stratégie de communication
 
 ### Documentation Architecture et Processus
 - [Architecture Hiérarchique](docs/ARCHITECTURE_HIERARCHIQUE.md) - Architecture stratifiée à plusieurs niveaux
