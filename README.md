@@ -70,6 +70,7 @@ Le nouveau système de planification automatique permet :
 - [Engagement Utilisateur](docs/ENGAGEMENT_UTILISATEUR.md) - Stratégies d'engagement et amélioration continue
 - [Gouvernance Collaborative](docs/GOUVERNANCE_COLLABORATIVE.md) - **NOUVEAU** : Organisation, rôles et processus de collaboration
 - [Guide de Développement Complet](docs/GUIDE_DEVELOPPEMENT_COMPLET.md) - **NOUVEAU** : Directives complètes pour le développement de NovaEvo
+- [Recrutement et Contractualisation](docs/RECRUTEMENT_CONTRACTUALISATION.md) - **NOUVEAU** : Stratégies et processus de recrutement externe et protection contractuelle
 
 ## Installation
 
