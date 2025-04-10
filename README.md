@@ -65,6 +65,7 @@ Le nouveau système de planification automatique permet :
 - [Sécurité et Conformité](docs/SECURITE_CONFORMITE.md) - Stratégie de sécurité et gestion des risques
 - [Système de Monitoring](docs/SYSTEME_MONITORING.md) - Surveillance temps réel multi-niveaux
 - [Engagement Utilisateur](docs/ENGAGEMENT_UTILISATEUR.md) - Stratégies d'engagement et amélioration continue
+- [Gouvernance Collaborative](docs/GOUVERNANCE_COLLABORATIVE.md) - **NOUVEAU** : Organisation, rôles et processus de collaboration
 
 ## Installation
 
