@@ -68,6 +68,7 @@ Le nouveau système de planification automatique permet :
 - [Système de Monitoring](docs/SYSTEME_MONITORING.md) - Surveillance temps réel multi-niveaux
 - [Engagement Utilisateur](docs/ENGAGEMENT_UTILISATEUR.md) - Stratégies d'engagement et amélioration continue
 - [Gouvernance Collaborative](docs/GOUVERNANCE_COLLABORATIVE.md) - **NOUVEAU** : Organisation, rôles et processus de collaboration
+- [Guide de Développement Complet](docs/GUIDE_DEVELOPPEMENT_COMPLET.md) - **NOUVEAU** : Directives complètes pour le développement de NovaEvo
 
 ## Installation
 
@@ -157,6 +158,8 @@ L'application sera disponible sur :
 ## Guide de démarrage rapide
 
 Pour les nouveaux développeurs ou contributeurs, nous avons préparé un [guide de démarrage rapide](docs/GETTING_STARTED.md) détaillé qui vous guidera pas à pas dans la mise en place de votre environnement de développement et la prise en main du projet.
+
+Pour une immersion complète dans le projet et ses principes de développement, consultez notre [Guide de Développement Complet](docs/GUIDE_DEVELOPPEMENT_COMPLET.md) qui présente les directives globales, l'architecture et les principes fondamentaux de NovaEvo.
 
 ## Architecture du système
 
@@ -491,7 +494,7 @@ Utilisez ces fonctionnalités uniquement si vous comprenez les risques associés
 ## Contribution
 Veuillez consulter le fichier [CONTRIBUTING.md](CONTRIBUTING.md) pour les détails sur notre code de conduite et le processus de soumission des pull requests.
 
-Pour les nouveaux contributeurs, nous recommandons de commencer par la consultation du [guide de démarrage rapide](docs/GETTING_STARTED.md).
+Pour les nouveaux contributeurs, nous recommandons de commencer par la consultation du [guide de démarrage rapide](docs/GETTING_STARTED.md) et du [Guide de Développement Complet](docs/GUIDE_DEVELOPPEMENT_COMPLET.md) qui contient des informations essentielles sur les principes directeurs, l'architecture et les exigences du projet.
 
 ## Feuille de route
 Pour connaître les prochaines étapes du développement, consultez notre [ROADMAP.md](ROADMAP.md) détaillée.
