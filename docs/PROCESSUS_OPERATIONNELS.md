@@ -4,6 +4,8 @@
 
 Ce document détaille les processus opérationnels et les mécanismes d'automatisation implémentés dans NovaEvo. Il expose les workflows complets d'interaction client, les systèmes d'allocation dynamique des ressources et les mécanismes d'escalade mis en place pour garantir une expérience utilisateur optimale et une réactivité maximale du système.
 
+> **Note importante**: Pour une compréhension complète du modèle organisationnel et de gouvernance du projet, consultez également le document [Gouvernance Collaborative](GOUVERNANCE_COLLABORATIVE.md) qui détaille la structure hiérarchique, les rôles et responsabilités, ainsi que les processus de collaboration.
+
 ## 1. Processus Opérationnels Clés
 
 ### 1.1 Workflow de Diagnostic et Résolution de Panne
@@ -621,12 +623,42 @@ NovaEvo implémente plusieurs mécanismes pour garantir la cohérence des inform
    - Dégradation gracieuse des fonctionnalités
    - Auto-récupération après résolution des problèmes
 
+## 4. Lien avec la Gouvernance Collaborative
+
+Les processus opérationnels décrits dans ce document s'inscrivent dans le cadre plus large de la gouvernance collaborative de NovaEvo. Cette intégration garantit que les opérations techniques sont parfaitement alignées avec la structure organisationnelle et les processus décisionnels du projet.
+
+### 4.1 Alignement avec la Structure Hiérarchique
+
+Tous les processus opérationnels sont exécutés dans le respect de la structure hiérarchique détaillée dans le document [Gouvernance Collaborative](GOUVERNANCE_COLLABORATIVE.md). Cela assure:
+
+- Une attribution claire des responsabilités pour chaque processus
+- Une chaîne de décision et d'escalade bien définie
+- Une supervision appropriée à chaque niveau d'intervention
+
+### 4.2 Responsabilités Matricielles
+
+Les matrices RACI définies dans le document de gouvernance collaborative s'appliquent directement aux processus opérationnels décrits ici, permettant une identification claire de qui est:
+- **Responsable** de l'exécution des tâches
+- **Approbateur** des décisions clés
+- **Consulté** pour expertise technique
+- **Informé** des avancées et résultats
+
+### 4.3 Amélioration Continue Intégrée
+
+Les mécanismes d'amélioration continue décrits dans ce document s'inscrivent dans le cadre plus large du "Processus de Gouvernance Évolutive" décrit dans la documentation de gouvernance, garantissant que:
+
+- Les retours d'expérience opérationnels alimentent directement le processus d'amélioration de la gouvernance
+- Les ajustements de structure organisationnelle se répercutent sur les processus opérationnels
+- L'évolution des rôles et responsabilités est reflétée dans les workflows d'intervention
+
 ## Conclusion
 
 Les processus opérationnels et mécanismes d'automatisation de NovaEvo constituent l'épine dorsale de la plateforme, garantissant une expérience utilisateur fluide et réactive. L'architecture hautement automatisée permet non seulement une détection précoce et une résolution efficace des problèmes, mais également une amélioration continue grâce aux boucles de rétroaction intégrées.
 
 La coordination transparente entre les différents modules fonctionnels assure une circulation optimale de l'information, tant verticalement entre les niveaux hiérarchiques qu'horizontalement entre les composants spécialisés. Cette approche intégrée permet à NovaEvo de délivrer une proposition de valeur unique dans l'écosystème automobile, en connectant efficacement les utilisateurs, les professionnels et les fournisseurs de pièces dans un environnement fluide et transparent.
 
+Pour une compréhension complète du fonctionnement du projet, il est recommandé de consulter ce document en conjonction avec la [Gouvernance Collaborative](GOUVERNANCE_COLLABORATIVE.md) qui détaille la structure organisationnelle et les processus de prise de décision.
+
 ---
 
-*Document créé le 10 avril 2025*
+*Document mis à jour le 10 avril 2025*
