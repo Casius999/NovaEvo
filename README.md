@@ -15,6 +15,7 @@ NovaEvo est une plateforme complète pour les passionnés et professionnels de l
 - **NOUVEAU** : Implémenter un système d'affiliation global assurant le suivi de 100% des achats réalisés via l'application
 - **NOUVEAU** : Intégrer des modules contextuels avec synchronisation en temps réel
 - **NOUVEAU** : Planifier automatiquement des rendez-vous avec des professionnels qualifiés
+- **NOUVEAU** : Garantir une intégrité et une traçabilité totale des données via notre architecture hiérarchique
 
 ## Structure du dépôt
 - `/ocr` - Module de scan OCR pour la carte grise
@@ -55,6 +56,15 @@ Le nouveau système de planification automatique permet :
 - [Architecture Serverless](docs/ARCHITECTURE_SERVERLESS.md) - Solution technique optimisée
 - [Modèle d'Affiliation](docs/AFFILIATION_FINANCES.md) - Projections du système d'affiliation
 - [Stratégie d'Investissement](docs/INVESTMENT_STRATEGY.md) - Plan de financement et valorisation
+
+### Documentation Architecture et Processus
+- [Architecture Hiérarchique](docs/ARCHITECTURE_HIERARCHIQUE.md) - Architecture stratifiée à plusieurs niveaux
+- [Architecture Modulaire](docs/ARCHITECTURE_MODULAIRE.md) - Structure modulaire bidimensionnelle
+- [Processus Opérationnels](docs/PROCESSUS_OPERATIONNELS.md) - Workflows et mécanismes d'automatisation
+- [Pipeline CI/CD](docs/PIPELINE_CICD.md) - Intégration continue et déploiement automatisé
+- [Sécurité et Conformité](docs/SECURITE_CONFORMITE.md) - Stratégie de sécurité et gestion des risques
+- [Système de Monitoring](docs/SYSTEME_MONITORING.md) - Surveillance temps réel multi-niveaux
+- [Engagement Utilisateur](docs/ENGAGEMENT_UTILISATEUR.md) - Stratégies d'engagement et amélioration continue
 
 ## Installation
 
@@ -147,9 +157,16 @@ Pour les nouveaux développeurs ou contributeurs, nous avons préparé un [guide
 
 ## Architecture du système
 
-L'application est construite selon une architecture modulaire qui facilite la maintenance et l'évolution. Pour une compréhension approfondie des interactions entre les différents modules, veuillez consulter notre [documentation d'architecture](docs/ARCHITECTURE.md).
+NovaEvo est construit selon une architecture hiérarchique et modulaire innovante qui garantit robustesse, flexibilité et évolutivité. Cette architecture stratifiée opère sur quatre niveaux clés permettant une gestion optimale de l'ensemble de l'écosystème:
 
-## Modules Contextuels
+- **Niveau Stratégique**: Intelligence décisionnelle, gouvernance systémique et optimisation stratégique
+- **Niveau Tactique**: Orchestration des services, analyse contextuelle et synchronisation multicanale
+- **Niveau Opérationnel**: Exécution des modules, monitoring temps réel et intégration continue
+- **Niveau Fondamental**: Infrastructure technique, sécurité & conformité et persistance des données
+
+Cette structure bidimensionnelle intègre à la fois des modules verticaux (fonctionnalités métier) et des composants horizontaux (services partagés) pour une cohérence globale et une gestion efficiente des ressources. Pour une compréhension approfondie, consultez notre [documentation d'architecture hiérarchique](docs/ARCHITECTURE_HIERARCHIQUE.md) et [architecture modulaire](docs/ARCHITECTURE_MODULAIRE.md).
+
+## Modules Contextuels et Synchronisation
 
 ### Configuration des Serveurs Contextuels
 Pour utiliser les modules contextuels, configurez les variables d'environnement suivantes :
@@ -167,102 +184,59 @@ API_KEY_VEHICLES_DATA=your_api_key_for_vehicles_data
 - **Repair Shops** : Réseau de professionnels et ateliers partenaires
 - **ECU Compatibility** : Matrices de compatibilité pour le flashage ECU
 
-## Planification Automatique
+### Mécanismes de Synchronisation
+Le système implémente une synchronisation intelligente avec vérification cryptographique des sources:
+- Synchronisation périodique configurable
+- Synchronisation à la demande pour données critiques
+- Vérification d'intégrité des données
+- Persistance locale pour mode hors ligne
+- Résolution automatique des conflits
 
-Le système intègre un planificateur de rendez-vous intelligent qui permet :
+## Planification Automatique et Gestion des Ressources
 
-1. **Recherche par proximité** : Trouver les professionnels proches du véhicule
-2. **Priorisation** : Gérer les urgences avec des créneaux prioritaires
-3. **Gestion des disponibilités** : Création dynamique de créneaux lors des pics de demande
-4. **Confirmation et rappels** : Suivi automatisé des rendez-vous
+NovaEvo intègre un système avancé de planification intelligente et d'allocation dynamique des ressources:
+
+### Planification de Rendez-vous
+1. **Recherche par proximité** : Identification géolocalisée des professionnels qualifiés
+2. **Priorisation intelligente** : Gestion des urgences avec créneaux prioritaires selon criticité
+3. **Création dynamique de disponibilités** : Allocation adaptative lors des pics de demande
+4. **Optimisation logistique** : Coordination entre disponibilité des pièces et des techniciens
+5. **Confirmation multicanale** : Suivi automatisé des rendez-vous avec rappels intelligents
+
+### Allocation Dynamique des Ressources
+- **Monitoring continu** : Surveillance permanente de tous les composants du système
+- **Allocation proactive** : Anticipation des besoins avant saturation des ressources
+- **Priorisation contextuelle** : Distribution intelligente selon criticité et impact
+- **Escalade automatique** : Mécanismes de transfert vers niveaux d'expertise supérieurs
 
 Pour utiliser cette fonctionnalité, configurez les variables suivantes :
 ```
 APPOINTMENT_API_ENABLED=True
 APPOINTMENT_API_URL=https://api.scheduling.example.com
 EMERGENCY_SLOTS_THRESHOLD=3  # Nombre minimum de créneaux d'urgence à maintenir
+DYNAMIC_ALLOCATION=True       # Active l'allocation dynamique des agents
 ```
 
-## Déploiement en production
+## Intégration Continue et Déploiement Automatisé
 
-Pour déployer l'application en environnement de production, suivez ces étapes :
+NovaEvo implémente un pipeline CI/CD robuste basé sur GitHub Actions et intégré avec Google Cloud Platform. Ce pipeline garantit qualité, fiabilité et déploiement continu:
 
-### 1. Configuration HTTPS
+### Phases du Pipeline
+1. **Développement** : Commit, revue de code, analyse statique
+2. **Build** : Compilation, construction de conteneurs, scan de sécurité
+3. **Test** : Tests unitaires, d'intégration, fonctionnels, de performance et sécurité
+4. **Staging** : Déploiement automatique, validation sur environnement préproduction
+5. **Production** : Déploiement graduel (Blue/Green) avec vérification post-déploiement
 
-La sécurité en production est essentielle, surtout pour les fonctionnalités comme l'accès à la caméra (OCR) et l'authentification des utilisateurs.
+### Approche de Test
+NovaEvo suit une stratégie de test pyramidale:
+- **Tests Unitaires** : >80% de couverture de code
+- **Tests d'Intégration** : >70% des flux critiques
+- **Tests Fonctionnels** : 100% des user stories
+- **Tests de Performance** : Temps de réponse <200ms au P95
+- **Tests de Sécurité** : 100% des API exposées
 
-1. **Acquérir un certificat SSL**
-   - Utilisez Let's Encrypt pour un certificat gratuit ou achetez-en un auprès d'une autorité de certification
-   - Placez les fichiers de certificat (cert.pem, key.pem) dans un répertoire sécurisé
-
-2. **Configuration du serveur web**
-   - **Avec Nginx** :
-     ```
-     server {
-         listen 443 ssl;
-         server_name votre-domaine.com;
-         
-         ssl_certificate /chemin/vers/cert.pem;
-         ssl_certificate_key /chemin/vers/key.pem;
-         
-         # Redirection du frontend
-         location / {
-             proxy_pass http://localhost:3000;
-             proxy_set_header Host $host;
-             proxy_set_header X-Real-IP $remote_addr;
-         }
-         
-         # Redirection de l'API
-         location /api/ {
-             proxy_pass http://localhost:5000/;
-             proxy_set_header Host $host;
-             proxy_set_header X-Real-IP $remote_addr;
-         }
-     }
-     
-     # Redirection HTTP vers HTTPS
-     server {
-         listen 80;
-         server_name votre-domaine.com;
-         return 301 https://$host$request_uri;
-     }
-     ```
-
-### 2. Variables d'environnement sécurisées
-
-En production, ne stockez jamais les variables d'environnement directement dans des fichiers :
-
-1. **Serveur dédié ou VPS**
-   - Utilisez des variables d'environnement système
-   - Configurez-les dans le fichier de service systemd
-
-2. **Conteneurs Docker**
-   - Utilisez Docker Secrets ou un service de gestion de secrets (HashiCorp Vault, AWS Secrets Manager)
-   - Exemple avec Docker Compose et secrets :
-     ```yaml
-     version: '3.8'
-     services:
-       app:
-         image: novaevo-backend
-         secrets:
-           - google_api_key
-           - openai_api_key
-           - stripe_api_key
-         environment:
-           - GOOGLE_API_KEY_FILE=/run/secrets/google_api_key
-           - OPENAI_API_KEY_FILE=/run/secrets/openai_api_key
-           - STRIPE_API_KEY_FILE=/run/secrets/stripe_api_key
-     
-     secrets:
-       google_api_key:
-         file: ./secrets/google_api_key.txt
-       openai_api_key:
-         file: ./secrets/openai_api_key.txt
-       stripe_api_key:
-         file: ./secrets/stripe_api_key.txt
-     ```
-
-Pour des instructions plus détaillées sur le déploiement, consultez notre [guide de déploiement](docs/DEPLOYMENT.md).
+Pour plus de détails, consultez notre [documentation CI/CD complète](docs/PIPELINE_CICD.md).
 
 ## Utilisation des modules
 
