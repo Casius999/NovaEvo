@@ -1,6 +1,6 @@
-# Guide de démarrage rapide - Assistant Auto Ultime
+# Guide de démarrage rapide - NovaEvo
 
-Ce guide est conçu pour vous aider à démarrer rapidement avec le projet Assistant Auto Ultime en tant que nouveau développeur ou contributeur. Il vous guidera à travers les étapes essentielles pour configurer votre environnement de développement et comprendre la structure du projet.
+Ce guide est conçu pour vous aider à démarrer rapidement avec le projet NovaEvo en tant que nouveau développeur ou contributeur. Il vous guidera à travers les étapes essentielles pour configurer votre environnement de développement et comprendre la structure du projet.
 
 ## 1. Prérequis
 
@@ -16,8 +16,8 @@ Avant de commencer, assurez-vous d'avoir installé les logiciels suivants :
 ### Cloner le dépôt
 
 ```bash
-git clone https://github.com/Casius999/assistant-auto-ultime.git
-cd assistant-auto-ultime
+git clone https://github.com/Casius999/NovaEvo.git
+cd NovaEvo
 ```
 
 ### Configurer l'environnement Python
@@ -28,7 +28,7 @@ python -m venv venv
 
 # Activer l'environnement virtuel
 ## Sur Windows
-venv\Scripts\activate
+venv\\Scripts\\activate
 ## Sur macOS/Linux
 source venv/bin/activate
 
@@ -56,7 +56,7 @@ Ouvrez le fichier `.env` dans un éditeur de texte et configurez les variables n
 - `OPENAI_API_KEY` - Votre clé API OpenAI pour le NLP
 - `STRIPE_API_KEY` - Votre clé API Stripe pour les abonnements
 
-**Note** : Pour le développement, vous pouvez utiliser des clés de test ou des services simulés.
+**Note** : Pour une liste complète et détaillée de tous les credentials nécessaires, consultez notre [Guide des Credentials](CREDENTIALS_GUIDE.md) qui fournit une documentation exhaustive de toutes les clés API, tokens et secrets requis par chaque module, ainsi que les plans de secours en cas d'indisponibilité.
 
 ## 3. Premiers pas avec le code
 
@@ -109,7 +109,7 @@ L'application sera disponible sur :
 
 ### Conseils de développement
 
-- Consultez la [documentation d'architecture](ARCHITECTURE.md) pour comprendre les interactions entre les modules
+- Consultez la [documentation d'architecture hiérarchique](ARCHITECTURE_HIERARCHIQUE.md) et [architecture modulaire](ARCHITECTURE_MODULAIRE.md) pour comprendre les interactions entre les modules
 - Chaque module a sa propre documentation détaillée dans le dossier `/docs`
 - Utilisez les tests existants comme référence pour comprendre le comportement attendu des modules
 - Pour les nouvelles fonctionnalités, ajoutez toujours des tests unitaires correspondants
@@ -150,15 +150,30 @@ docker-compose logs -f
 docker-compose down
 ```
 
-## 7. Références utiles
+## 7. Accès et Credentials
 
-- [Documentation officielle de Python](https://docs.python.org/3/)
-- [Documentation officielle de React](https://reactjs.org/docs/getting-started.html)
-- [Documentation de l'API Google Cloud Vision](https://cloud.google.com/vision/docs)
-- [Documentation de l'API OpenAI](https://platform.openai.com/docs/api-reference)
-- [Documentation de l'API Stripe](https://stripe.com/docs/api)
+Pour accéder à tous les services et API nécessaires au développement :
 
-## 8. Besoin d'aide ?
+1. Consultez le [Guide des Credentials](CREDENTIALS_GUIDE.md) pour une liste exhaustive de tous les accès requis
+2. Demandez les credentials de développement à l'administrateur du projet
+3. Stockez les credentials de manière sécurisée, sans jamais les inclure dans le code source
+4. Utilisez Google Cloud Secret Manager ou AWS Secrets Manager pour la gestion des secrets en production
+
+### Rotation des Credentials
+
+- Tous les credentials de développement sont régulièrement renouvelés (tous les 90 jours)
+- Suivez les procédures documentées dans le Guide des Credentials pour la mise à jour
+
+## 8. Références utiles
+
+- [Documentation complète du projet](README.md)
+- [Architecture Hiérarchique](ARCHITECTURE_HIERARCHIQUE.md)
+- [Processus Opérationnels](PROCESSUS_OPERATIONNELS.md)
+- [Pipeline CI/CD](PIPELINE_CICD.md)
+- [Sécurité et Conformité](SECURITE_CONFORMITE.md)
+- [Guide de Développement Complet](GUIDE_DEVELOPPEMENT_COMPLET.md)
+
+## 9. Besoin d'aide ?
 
 Si vous avez des questions ou rencontrez des difficultés :
 
@@ -166,4 +181,4 @@ Si vous avez des questions ou rencontrez des difficultés :
 - Vérifiez les issues GitHub (ouvertes et fermées)
 - Contactez l'équipe via les canaux de communication internes
 
-Bonne contribution au projet Assistant Auto Ultime !
+Bonne contribution au projet NovaEvo !
