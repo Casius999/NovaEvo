@@ -65,6 +65,7 @@ Le nouveau système de planification automatique permet :
 - [Processus Opérationnels](docs/PROCESSUS_OPERATIONNELS.md) - Workflows et mécanismes d'automatisation
 - [Pipeline CI/CD](docs/PIPELINE_CICD.md) - Intégration continue et déploiement automatisé
 - [Sécurité et Conformité](docs/SECURITE_CONFORMITE.md) - Stratégie de sécurité et gestion des risques
+- [Guide des Credentials](docs/CREDENTIALS_GUIDE.md) - Documentation exhaustive des credentials et accès obligatoires
 - [Système de Monitoring](docs/SYSTEME_MONITORING.md) - Surveillance temps réel multi-niveaux
 - [Engagement Utilisateur](docs/ENGAGEMENT_UTILISATEUR.md) - Stratégies d'engagement et amélioration continue
 - [Gouvernance Collaborative](docs/GOUVERNANCE_COLLABORATIVE.md) - **NOUVEAU** : Organisation, rôles et processus de collaboration
