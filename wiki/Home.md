@@ -19,72 +19,39 @@ Ce wiki est conçu pour fournir une documentation complète et détaillée sur t
 - [Vision et Mission](Vision-et-Mission) - La philosophie et les objectifs de NovaEvo
 
 ### 🏗️ Architecture du Projet
-- [Vue d'Ensemble de l'Architecture](Architecture)
-- [Architecture Hiérarchique](Architecture-Hiérarchique) - Structure à 4 niveaux (Stratégique, Tactique, Opérationnel, Fondamental)
-- [Architecture Modulaire](Architecture-Modulaire) - Organisation modulaire bidimensionnelle
-- [Schémas d'Architecture](Schémas-Architecture) - Diagrammes et représentations visuelles
+- [Vue d'Ensemble de l'Architecture](Architecture) - Architecture hiérarchique et modulaire
+- [Architecture du Monitoring](Monitoring-et-Métriques) - Système de monitoring multi-niveaux
 
 ### 📦 Modules Fonctionnels
-- [Vue d'Ensemble des Modules](Modules-Fonctionnels)
+- [Vue d'Ensemble des Modules](Modules-Fonctionnels) - Présentation des modules principaux
 - [Module OCR](Module-OCR) - Scan et extraction d'informations des documents officiels
-- [Module OBD2](Module-OBD2) - Communication avec le système diagnostic embarqué
-- [Module NLP](Module-NLP) - Traitement du langage naturel et assistant conversationnel
-- [Module Image Recognition](Module-Image-Recognition) - Diagnostic visuel par reconnaissance d'images
-- [Module ECU Flash](Module-ECU-Flash) - Reprogrammation et optimisation ECU
-- [Module Parts Finder](Module-Parts-Finder) - Recherche multi-source de pièces compatibles
-- [Module Subscriptions](Module-Subscriptions) - Gestion des abonnements utilisateurs
-- [Module Affiliations](Module-Affiliations) - Système de tracking d'affiliation global
-- [Module Contexte](Module-Contexte) - Synchronisation des données contextuelles
-- [Module Planification](Module-Planification) - Planification intelligente des interventions
 
 ### ⚙️ Processus Opérationnels
-- [Vue d'Ensemble des Processus](Processus-Opérationnels)
-- [Workflows Automatisés](Workflows-Automatisés) - Chaînes de traitement automatisées
-- [Détection et Diagnostic](Détection-et-Diagnostic) - Processus de détection et analyse des problèmes
-- [Allocation Dynamique](Allocation-Dynamique) - Allocation intelligente des ressources système
-- [Suivi des Performances](Suivi-des-Performances) - Monitoring et analyse des métriques
+- [Vue d'Ensemble des Processus](Processus-Opérationnels) - Chaînes de traitement et workflows
 
 ### 🔄 CI/CD et Tests
 - [Pipeline d'Intégration Continue](Pipeline-CI-CD) - Processus d'intégration et déploiement continus
-- [Stratégie de Test](Stratégie-de-Test) - Approche pyramidale des tests
-- [Déploiement Automatisé](Déploiement-Automatisé) - Mécanismes de déploiement
-- [Environnements](Environnements) - Organisation des environnements de développement
 
 ### 🔒 Sécurité et Conformité
-- [Principes de Sécurité](Principes-de-Sécurité) - Fondements de notre approche sécurité
-- [RGPD et Conformité](RGPD-et-Conformité) - Respect des réglementations et protection des données
-- [Gestion des Risques](Gestion-des-Risques) - Identification et mitigation des risques
-- [Sauvegarde et Reprise](Sauvegarde-et-Reprise) - Stratégies de continuité opérationnelle
+- [Sécurité et Conformité](Sécurité-et-Conformité) - Sécurisation et protection des données
 
 ### 📊 Monitoring et Métriques
-- [Architecture du Monitoring](Architecture-du-Monitoring) - Structure du système de surveillance
-- [Métriques et KPIs](Métriques-et-KPIs) - Indicateurs clés de performance suivis
-- [Alertes et Notifications](Alertes-et-Notifications) - Système d'alerte et de notification
-- [Tableaux de Bord](Tableaux-de-Bord) - Outils de visualisation et monitoring
+- [Monitoring et Métriques](Monitoring-et-Métriques) - Surveillance, alertes et performance
 
 ### 💰 Modèle Économique
-- [Abonnements](Abonnements) - Formules et gestion des abonnements
-- [Système d'Affiliation](Système-Affiliation) - Fonctionnement du système d'affiliation global
-- [Revenus Complémentaires](Revenus-Complémentaires) - Sources de revenus additionnelles
-- [Projections Financières](Projections-Financières) - Modélisation financière du projet
+- [Modèle Économique](Modèle-Économique) - Abonnements, affiliation et revenus
 
 ### 👥 Gouvernance et Collaboration
-- [Organisation des Équipes](Organisation-des-Équipes) - Structure organisationnelle
+- [Gouvernance Collaborative](Gouvernance-Collaborative) - Organisation et processus décisionnels
 - [Workflow Git](Workflow-Git) - Méthodologie de gestion des branches et contributions
-- [Code Review](Code-Review) - Processus de revue de code
-- [Documentation](Documentation) - Standards et pratiques de documentation
 
 ### 🗓️ Roadmap
-- [MVP et Versions](MVP-et-Versions) - Étapes de développement du produit
-- [Planning de Déploiement](Planning-de-Déploiement) - Calendrier de déploiement des fonctionnalités
-- [Roadmap Technique](Roadmap-Technique) - Évolutions techniques planifiées
-- [Objectifs Commerciaux](Objectifs-Commerciaux) - Cibles et indicateurs commerciaux
+- [Roadmap](Roadmap) - Évolution planifiée du projet NovaEvo
 
 ### ❓ FAQ et Glossaire
 - [Questions Fréquentes](FAQ) - Réponses aux questions courantes
 - [Glossaire Technique](Glossaire-Technique) - Définitions des termes techniques
-- [Glossaire Métier](Glossaire-Métier) - Définitions des termes métier
-- [Ressources Externes](Ressources-Externes) - Liens et références utiles
+- [Glossaire Métier](Glossaire-Métier) - Définitions des termes métier automobile
 
 ## Comment contribuer à ce Wiki
 
@@ -96,7 +63,7 @@ Ce wiki est un document vivant qui évolue constamment. Pour contribuer :
 4. Ajoutez un message de commit décrivant vos changements
 5. Cliquez sur "Save" pour soumettre vos modifications
 
-Pour toute question sur la contribution au wiki, référez-vous à la page [Gouvernance et Collaboration](Gouvernance-et-Collaboration).
+Pour toute question sur la contribution au wiki, référez-vous à la page [Gouvernance Collaborative](Gouvernance-Collaborative).
 
 ## Standards de documentation
 
@@ -109,6 +76,20 @@ Pour maintenir la cohérence et la qualité de ce wiki, veuillez suivre ces dire
 - Incluez des diagrammes et schémas lorsque cela est pertinent
 - Maintenez les liens internes et externes à jour
 - Datez les mises à jour majeures en bas de page
+
+## Organisation du Wiki
+
+Le wiki est structuré de manière hiérarchique pour faciliter la navigation et la compréhension du projet NovaEvo. Chaque section principale contient plusieurs sous-pages qui détaillent des aspects spécifiques. Cette organisation reflète l'architecture modulaire et hiérarchique du projet lui-même.
+
+Les pages avec "_REDIRECT_" dans le titre sont des pages de redirection pour éviter les doublons et maintenir une structure cohérente. Veuillez utiliser les liens fournis dans ces pages pour accéder à la documentation à jour.
+
+## Recherche et exploration
+
+Pour trouver rapidement des informations spécifiques :
+1. Utilisez la fonction de recherche intégrée du wiki (en haut à droite)
+2. Consultez la FAQ pour les questions courantes
+3. Explorez les glossaires pour comprendre la terminologie
+4. Suivez les liens entre les pages pour naviguer entre les concepts liés
 
 ---
 
